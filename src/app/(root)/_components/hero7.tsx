@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 
 export function Hero7() {
   return (
-    <section className="flex min-h-[70vh] flex-col items-center justify-center px-4 text-center">
+    <section className="flex min-h-[70vh] mt-10 flex-col items-center justify-center px-4 text-center">
       {/* Top badge */}
       <Badge
         variant="secondary"

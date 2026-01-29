@@ -2,7 +2,7 @@ import { TutorCard } from "@/components/tutor-card";
 import { Tutor } from "@/types";
 
 export default async function Tutors() {
-  const res = await fetch("http://localhost:5000/api/tutors");
+  const res = await fetch("http://localhost:5000/api/tutors?isFeatured=true");
   const { data } = await res.json();
 
   return (
