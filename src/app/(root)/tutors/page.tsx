@@ -1,23 +1,16 @@
 import { TutorFilter } from "./_components/tutor-filter";
-import { Tutor } from "@/types";
 import { TutorCard } from "@/components/tutor-card";
 import { categoryService } from "@/services/category.service";
+import { tutorService } from "@/services/tutor.service";
 
 export default async function TutorsPage({
   searchParams,
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const url = new URL(`http://localhost:5000/api/tutors`);
+  const queryParams = await searchParams;
 
-  const filters = await searchParams;
-  Object.entries(filters).forEach(([key, value]) => {
-    if (value) url.searchParams.append(key, value.toString());
-  });
-
-  const res = await fetch(url.toString());
-  const { data } = await res.json();
-
+  const { data: tutors } = await tutorService.getAllTutors(queryParams);
   const { data: categories } = await categoryService.getCategories();
 
   return (
@@ -25,12 +18,12 @@ export default async function TutorsPage({
       <TutorFilter categories={categories.data} />
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {data.map((tutor: Tutor) => (
+        {tutors.map((tutor) => (
           <TutorCard key={tutor.id} tutor={tutor} />
         ))}
       </div>
 
-      {data.length === 0 && (
+      {tutors.length === 0 && (
         <p className="text-center text-muted-foreground">
           No tutors match your filters.
         </p>

@@ -8,9 +8,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Star } from "lucide-react";
-import { Tutor } from "@/types";
+import { TutorProfile } from "@/types";
+import Link from "next/link";
 
-export function TutorCard({ tutor }: { tutor: Tutor }) {
+export function TutorCard({ tutor }: { tutor: TutorProfile }) {
   return (
     <Card className="flex h-full flex-col transition hover:shadow-lg">
       <CardHeader className="flex flex-row items-center gap-4">
@@ -58,7 +59,7 @@ export function TutorCard({ tutor }: { tutor: Tutor }) {
         </div>
 
         <Button size="sm" className="rounded-full">
-          View Profile
+          <Link href={`/tutors/${tutor.id}`}>View Profile</Link>
         </Button>
       </CardFooter>
     </Card>
