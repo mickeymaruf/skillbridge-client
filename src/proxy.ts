@@ -29,7 +29,7 @@ export async function proxy(request: NextRequest) {
     role === userRole.ADMIN &&
     (pathname.startsWith("/dashboard") || pathname.startsWith("/tutor"))
   ) {
-    return NextResponse.redirect(new URL("/admin/dashboard", request.url));
+    return NextResponse.redirect(new URL("/admin", request.url));
   }
 
   return NextResponse.next();
