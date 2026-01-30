@@ -20,6 +20,7 @@ import { useForm } from "@tanstack/react-form";
 import z from "zod";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   email: z.email(),
@@ -27,6 +28,7 @@ const formSchema = z.object({
 });
 
 export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
+  const router = useRouter();
   const form = useForm({
     defaultValues: {
       email: "",
@@ -45,6 +47,8 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
         }
 
         toast.success("Logged in successfully", { id });
+
+        router.push("/dashboard");
       } catch (error) {
         toast.error(
           error instanceof Error

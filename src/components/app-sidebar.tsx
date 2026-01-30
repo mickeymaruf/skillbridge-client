@@ -14,16 +14,22 @@ import {
 } from "@/components/ui/sidebar";
 import Link from "next/link";
 import { NavUser } from "./nav-user";
+import { userRole } from "@/constants/userRole";
+import { authClient } from "@/lib/auth-client";
 
-const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  navMain: [
+type Routes = {
+  title: string;
+  url: string;
+  items: {
+    title: string;
+    url: string;
+  }[];
+};
+
+const routes: Record<string, Routes[]> = {
+  student: [
     {
-      title: "Student Routes",
+      title: "Getting Started",
       url: "#",
       items: [
         {
@@ -40,8 +46,10 @@ const data = {
         },
       ],
     },
+  ],
+  tutor: [
     {
-      title: "Tutor Routes",
+      title: "Getting Started",
       url: "#",
       items: [
         {
@@ -58,8 +66,10 @@ const data = {
         },
       ],
     },
+  ],
+  admin: [
     {
-      title: "Admin Routes",
+      title: "Getting Started",
       url: "#",
       items: [
         {
@@ -83,32 +93,62 @@ const data = {
   ],
 };
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  return (
-    <Sidebar {...props}>
-      <SidebarHeader className="border-sidebar-border h-16 border-b">
-        <NavUser user={data.user} />
-      </SidebarHeader>
-      <SidebarContent>
-        {/* We create a SidebarGroup for each parent. */}
-        {data.navMain.map((item) => (
-          <SidebarGroup key={item.title}>
-            <SidebarGroupLabel>{item.title}</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {item.items.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild>
-                      <Link href={item.url}>{item.title}</Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        ))}
-      </SidebarContent>
-      <SidebarRail />
-    </Sidebar>
-  );
+export function AppSidebar({
+  user,
+  ...props
+}: {
+  user: any & React.ComponentProps<typeof Sidebar>;
+}) {
+  let navMenu: Routes[] = [];
+
+  switch (user.role) {
+    case userRole.STUDENT:
+      navMenu = routes.student;
+      break;
+    case userRole.TUTOR:
+      navMenu = routes.tutor;
+      break;
+    case userRole.ADMIN:
+      navMenu = routes.admin;
+      break;
+
+    default:
+      navMenu = [];
+      break;
+  }
+
+  if (user.role)
+    return (
+      <Sidebar {...props}>
+        <SidebarHeader className="border-sidebar-border h-16 border-b">
+          <NavUser
+            user={{
+              name: user.name,
+              email: user.email,
+              avatar: user.avatar,
+            }}
+          />
+        </SidebarHeader>
+        <SidebarContent>
+          {/* We create a SidebarGroup for each parent. */}
+          {navMenu.map((item) => (
+            <SidebarGroup key={item.title}>
+              <SidebarGroupLabel>{item.title}</SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {item.items.map((item: any) => (
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton asChild>
+                        <Link href={item.url}>{item.title}</Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          ))}
+        </SidebarContent>
+        <SidebarRail />
+      </Sidebar>
+    );
 }
