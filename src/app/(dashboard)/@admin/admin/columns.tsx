@@ -4,6 +4,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { STAT_CONFIG } from "./stat.config";
+import Link from "next/link";
 
 export type MetricRow = {
   metric: string;
@@ -34,16 +35,17 @@ export const columns: ColumnDef<MetricRow>[] = [
     id: "actions",
     header: "View",
     cell: ({ row }) => {
+      const href = STAT_CONFIG[row.original.metric].href;
       return (
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => {
-            console.log("Clicked:", row.original.metric);
-          }}
-        >
-          <ArrowRight />
-        </Button>
+        <div className="h-8">
+          {href && (
+            <Button asChild variant="outline" size="sm">
+              <Link href={href}>
+                <ArrowRight />
+              </Link>
+            </Button>
+          )}
+        </div>
       );
     },
   },
