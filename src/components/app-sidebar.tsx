@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/sidebar";
 import Link from "next/link";
 import { NavUser } from "./nav-user";
-import { userRole } from "@/constants/userRole";
+import { UserRole } from "@/constants/user";
 import { authClient } from "@/lib/auth-client";
 
 type Routes = {
@@ -102,13 +102,13 @@ export function AppSidebar({
   let navMenu: Routes[] = [];
 
   switch (user.role) {
-    case userRole.STUDENT:
+    case UserRole.STUDENT:
       navMenu = routes.student;
       break;
-    case userRole.TUTOR:
+    case UserRole.TUTOR:
       navMenu = routes.tutor;
       break;
-    case userRole.ADMIN:
+    case UserRole.ADMIN:
       navMenu = routes.admin;
       break;
 

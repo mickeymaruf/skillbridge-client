@@ -13,7 +13,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { userRole } from "@/constants/userRole";
+import { UserRole } from "@/constants/user";
 import { authService } from "@/services/auth.service";
 import React from "react";
 
@@ -33,11 +33,11 @@ export default async function DashboardLayout({
 
   const renderContent = (role: string) => {
     switch (role) {
-      case userRole.STUDENT:
+      case UserRole.STUDENT:
         return student;
-      case userRole.TUTOR:
+      case UserRole.TUTOR:
         return tutor;
-      case userRole.ADMIN:
+      case UserRole.ADMIN:
         return admin;
 
       default:

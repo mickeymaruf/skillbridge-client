@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { userRole } from "./constants/userRole";
+import { UserRole } from "./constants/user";
 import { authService } from "./services/auth.service";
 
 export async function proxy(request: NextRequest) {
@@ -12,21 +12,21 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
   if (
-    role === userRole.STUDENT &&
+    role === UserRole.STUDENT &&
     (pathname.startsWith("/tutor") || pathname.startsWith("/admin"))
   ) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
   if (
-    role === userRole.TUTOR &&
+    role === UserRole.TUTOR &&
     (pathname.startsWith("/dashboard") || pathname.startsWith("/admin"))
   ) {
     return NextResponse.redirect(new URL("/tutor/dashboard", request.url));
   }
 
   if (
-    role === userRole.ADMIN &&
+    role === UserRole.ADMIN &&
     (pathname.startsWith("/dashboard") || pathname.startsWith("/tutor"))
   ) {
     return NextResponse.redirect(new URL("/admin", request.url));

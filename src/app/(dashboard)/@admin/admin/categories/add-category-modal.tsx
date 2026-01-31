@@ -17,7 +17,7 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
-import { createCategory } from "@/actions/createCategory";
+import { createCategory } from "@/actions/category";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 

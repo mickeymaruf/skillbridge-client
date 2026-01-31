@@ -20,7 +20,7 @@ import { useForm } from "@tanstack/react-form";
 import z from "zod";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
-import { userRole } from "@/constants/userRole";
+import { UserRole } from "@/constants/user";
 import {
   Select,
   SelectContent,
@@ -34,7 +34,7 @@ const formSchema = z.object({
   email: z.email(),
   password: z.string().min(8, "Must be at least 8 characters long."),
   role: z.enum(
-    [userRole.STUDENT, userRole.TUTOR],
+    [UserRole.STUDENT, UserRole.TUTOR],
     "Please select a valid role",
   ),
 });
@@ -45,7 +45,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
       name: "",
       email: "",
       password: "",
-      role: userRole.STUDENT,
+      role: UserRole.STUDENT,
     },
     validators: {
       onSubmit: formSchema,
@@ -179,10 +179,10 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
                       </SelectTrigger>
 
                       <SelectContent>
-                        <SelectItem value={userRole.STUDENT}>
+                        <SelectItem value={UserRole.STUDENT}>
                           Student
                         </SelectItem>
-                        <SelectItem value={userRole.TUTOR}>Tutor</SelectItem>
+                        <SelectItem value={UserRole.TUTOR}>Tutor</SelectItem>
                       </SelectContent>
                     </Select>
 
