@@ -47,7 +47,36 @@ export interface AvailabilitySlot {
   startTime: string;
   endTime: string;
   isBooked: boolean;
+  booking?: Booking;
 }
+
+export type Booking = {
+  id: string;
+  status: "CONFIRMED" | "COMPLETED" | "CANCELLED";
+  createdAt: Date;
+
+  student: {
+    id: string;
+    name: string;
+    email: string;
+  };
+
+  tutorProfile: {
+    id: string;
+    hourlyRate: number;
+    rating: number;
+  };
+
+  slot: {
+    startTime: Date;
+    endTime: Date;
+  };
+
+  review?: {
+    rating: number;
+    review: string;
+  };
+};
 
 export interface Review {
   id: string;

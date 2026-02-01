@@ -1,4 +1,9 @@
-import { ApiResponse, TutorProfile, TutorProfileResponse } from "@/types";
+import {
+  ApiResponse,
+  AvailabilitySlot,
+  TutorProfile,
+  TutorProfileResponse,
+} from "@/types";
 import { cookies } from "next/headers";
 
 export const tutorService = {
@@ -45,6 +50,51 @@ export const tutorService = {
     }
 
     return await res.json();
+  },
+  getTutorAvailability: async () => {
+    const cookieStore = await cookies();
+
+    const res = await fetch(
+      `http://localhost:5000/api/tutors/profile/availability`,
+      {
+        headers: {
+          Cookie: cookieStore.toString(),
+        },
+      },
+    );
+
+    if (!res.ok) {
+      const error = await res.json();
+      throw new Error(
+        `Failed to fetch tutor availability (${res.status}): ${error.error}`,
+      );
+    }
+
+    const data = await res.json();
+    return { data };
+  },
+  getTutorBookings: async () => {
+    const cookieStore = await cookies();
+
+    const res = await fetch(
+      `http://localhost:5000/api/tutors/profile/bookings`,
+      {
+        headers: {
+          Cookie: cookieStore.toString(),
+        },
+        next: { tags: ["bookings"] },
+      },
+    );
+
+    if (!res.ok) {
+      const error = await res.json();
+      throw new Error(
+        `Failed to fetch tutor bookings (${res.status}): ${error.error}`,
+      );
+    }
+
+    const data = await res.json();
+    return { data };
   },
   createTutorProfile: async () => {
     const cookieStore = await cookies();

@@ -59,3 +59,28 @@ export const setTutorCategories = async (categoryIds: string[]) => {
 
   return res.json();
 };
+
+export const createAvailability = async (data: {
+  startTime: string;
+  endTime: string;
+}) => {
+  const cookieStore = await cookies();
+
+  const res = await fetch(`http://localhost:5000/api/tutors/availability`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Cookie: cookieStore.toString(),
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!res.ok) {
+    const error = await res.json();
+    throw new Error(error.error);
+  }
+
+  revalidateTag("users", "max");
+
+  return res.json();
+};

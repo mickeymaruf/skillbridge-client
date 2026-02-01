@@ -3,32 +3,7 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
-
-// types/booking.ts
-export type Booking = {
-  id: string;
-  status: "PENDING" | "CONFIRMED" | "COMPLETED" | "CANCELLED";
-  createdAt: string;
-
-  student: {
-    id: string;
-    name: string;
-    email: string;
-  };
-
-  tutorProfile: {
-    hourlyRate: number;
-    user: {
-      name: string;
-      email: string;
-    };
-  };
-
-  slot: {
-    startTime: string;
-    endTime: string;
-  };
-};
+import { Booking } from "@/types";
 
 export const columns: ColumnDef<Booking>[] = [
   {
