@@ -3,8 +3,8 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Star } from "lucide-react";
 import { tutorService } from "@/services/tutor.service";
-import { Button } from "@/components/ui/button";
 import EditTutorDialog from "./edit-tutor-dialog";
+import EditCategoryDialog from "./edit-category-dialog";
 
 export default async function TutorProfile() {
   const {
@@ -50,7 +50,7 @@ export default async function TutorProfile() {
       </Card>
 
       {/* Categories */}
-      <Card>
+      <Card className="relative">
         <CardHeader>
           <CardTitle>Subjects</CardTitle>
         </CardHeader>
@@ -61,6 +61,11 @@ export default async function TutorProfile() {
             </Badge>
           ))}
         </CardContent>
+        <div className="absolute right-6 top-6">
+          <EditCategoryDialog
+            selectedCategories={categories.map((c) => c.categoryId)}
+          />
+        </div>
       </Card>
 
       {/* Reviews */}

@@ -32,3 +32,30 @@ export const updateTutorProfile = async (data: {
 
   return res.json();
 };
+
+export const setTutorCategories = async (categoryIds: string[]) => {
+  const cookieStore = await cookies();
+
+  const res = await fetch(
+    `http://localhost:5000/api/tutors/profile/set-categories`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: cookieStore.toString(),
+      },
+      body: JSON.stringify({ categoryIds }),
+    },
+  );
+
+  if (!res.ok) {
+    const error = await res.json();
+    throw new Error(
+      `Failed setting tutor categories (${res.status}): ${error.error}`,
+    );
+  }
+
+  revalidateTag("users", "max");
+
+  return res.json();
+};
