@@ -4,6 +4,7 @@ export interface TutorProfile {
   bio: string | null;
   hourlyRate: number;
   rating: number;
+  reviewCount: number;
   isFeatured: boolean;
   createdAt: string;
   updatedAt: string;

@@ -1,4 +1,5 @@
 import { ApiResponse, TutorProfile, TutorProfileResponse } from "@/types";
+import { cookies } from "next/headers";
 
 export const tutorService = {
   getAllTutors: async (searchParams: {
@@ -26,5 +27,44 @@ export const tutorService = {
     }
 
     return await res.json();
+  },
+  getMyTutorProfile: async (): Promise<TutorProfileResponse> => {
+    const cookieStore = await cookies();
+
+    const res = await fetch(`http://localhost:5000/api/tutors/profile/me`, {
+      headers: {
+        Cookie: cookieStore.toString(),
+      },
+    });
+
+    if (!res.ok) {
+      const error = await res.json();
+      throw new Error(
+        `Failed to fetch tutor details (${res.status}): ${error.error}`,
+      );
+    }
+
+    return await res.json();
+  },
+  createTutorProfile: async () => {
+    const cookieStore = await cookies();
+
+    const res = await fetch(`http://localhost:5000/api/tutors/profile`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: cookieStore.toString(),
+      },
+    });
+
+    if (!res.ok) {
+      const error = await res.json();
+      throw new Error(
+        `Failed  create tutor profile (${res.status}): ${error.error}`,
+      );
+    }
+
+    const data = await res.json();
+    return { data };
   },
 };
