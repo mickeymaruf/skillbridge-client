@@ -96,6 +96,26 @@ export const tutorService = {
     const data = await res.json();
     return { data };
   },
+  getTutorStats: async () => {
+    const cookieStore = await cookies();
+
+    const res = await fetch(`http://localhost:5000/api/tutors/profile/stats`, {
+      headers: {
+        Cookie: cookieStore.toString(),
+      },
+      next: { tags: ["tutorstats"] },
+    });
+
+    if (!res.ok) {
+      const error = await res.json();
+      throw new Error(
+        `Failed to fetch tutor stats (${res.status}): ${error.error}`,
+      );
+    }
+
+    const data = await res.json();
+    return { data };
+  },
   createTutorProfile: async () => {
     const cookieStore = await cookies();
 
