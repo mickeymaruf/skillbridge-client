@@ -61,11 +61,7 @@ export type Booking = {
     email: string;
   };
 
-  tutorProfile: {
-    id: string;
-    hourlyRate: number;
-    rating: number;
-  };
+  tutorProfile: TutorProfile;
 
   slot: {
     startTime: Date;

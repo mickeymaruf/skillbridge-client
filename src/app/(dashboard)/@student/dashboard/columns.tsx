@@ -2,9 +2,8 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
-import { markBookingCompleted } from "@/actions/booking";
+import { markBookingCancelled } from "@/actions/booking";
 import { Booking } from "@/types";
 import {
   NativeSelect,
@@ -12,16 +11,16 @@ import {
 } from "@/components/ui/native-select";
 import { BookingStatus } from "@/constants/user";
 
-export const bookingColumns: ColumnDef<Booking>[] = [
+export const columns: ColumnDef<Booking>[] = [
   {
-    header: "Student",
-    accessorFn: (row) => row.student?.name ?? "—",
+    header: "Tutor",
+    accessorFn: (row) => row.tutorProfile.user.name ?? "—",
   },
 
-  {
-    header: "Email",
-    accessorFn: (row) => row.student?.email ?? "—",
-  },
+  // {
+  //   header: "Email",
+  //   accessorFn: (row) => row.tutorProfile.user.email ?? "—",
+  // },
 
   {
     header: "Slot Time",
@@ -82,13 +81,13 @@ export const bookingColumns: ColumnDef<Booking>[] = [
             booking.status === BookingStatus.CANCELLED
           }
           onChange={async (e) =>
-            e.target.value === BookingStatus.COMPLETED &&
-            (await markBookingCompleted(booking.id))
+            e.target.value === BookingStatus.CANCELLED &&
+            (await markBookingCancelled(booking.id))
           }
         >
           <NativeSelectOption value="">Select</NativeSelectOption>
-          <NativeSelectOption value={BookingStatus.COMPLETED}>
-            {BookingStatus.COMPLETED}
+          <NativeSelectOption value={BookingStatus.CANCELLED}>
+            Cancel
           </NativeSelectOption>
         </NativeSelect>
       );
