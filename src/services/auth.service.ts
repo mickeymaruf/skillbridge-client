@@ -11,6 +11,7 @@ export const authService = {
         Cookie: cookieStore.toString(),
       },
       cache: "no-store",
+      next: { tags: ["session"] },
     });
 
     if (!res.ok) {
