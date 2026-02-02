@@ -18,16 +18,18 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { createCategory } from "@/actions/category";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useState } from "react";
 
 export const categorySchema = z.object({
   name: z.string().min(2, "Name is required"),
   slug: z.string().min(2, "Slug is required"),
 });
 
-export function AddCategoryModal({ modal }: { modal: boolean }) {
-  const router = useRouter();
+export function AddCategoryModal() {
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const form = useForm({
     defaultValues: {
       name: "",
@@ -35,23 +37,22 @@ export function AddCategoryModal({ modal }: { modal: boolean }) {
     },
     validators: { onSubmit: categorySchema },
     onSubmit: async ({ value }) => {
-      await createCategory(value);
-
-      router.push("/admin/categories");
-      toast.success("Category added!");
-      form.reset();
+      try {
+        setLoading(true);
+        await createCategory(value);
+        toast.success("Category added!");
+        form.reset();
+        setOpen(false);
+      } catch {
+        toast.error("Failed to add category");
+      } finally {
+        setLoading(false);
+      }
     },
   });
 
   return (
-    <Dialog
-      open={modal}
-      onOpenChange={() =>
-        router.push(
-          modal ? "/admin/categories" : "/admin/categories/?modal=true",
-        )
-      }
-    >
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="cursor-pointer">Add Category</Button>
       </DialogTrigger>
@@ -80,7 +81,6 @@ export function AddCategoryModal({ modal }: { modal: boolean }) {
                     <FieldLabel htmlFor={field.name}>Name</FieldLabel>
                     <Input
                       id={field.name}
-                      type="text"
                       value={field.state.value}
                       onChange={(e) => {
                         field.handleChange(e.target.value);
@@ -90,6 +90,7 @@ export function AddCategoryModal({ modal }: { modal: boolean }) {
                         );
                       }}
                       aria-invalid={isInvalid}
+                      disabled={loading}
                     />
                     {isInvalid && (
                       <FieldError errors={field.state.meta.errors} />
@@ -98,6 +99,7 @@ export function AddCategoryModal({ modal }: { modal: boolean }) {
                 );
               }}
             />
+
             <form.Field
               name="slug"
               children={(field) => {
@@ -109,10 +111,10 @@ export function AddCategoryModal({ modal }: { modal: boolean }) {
                     <FieldLabel htmlFor={field.name}>Slug</FieldLabel>
                     <Input
                       id={field.name}
-                      type="text"
                       value={field.state.value}
                       onChange={(e) => field.handleChange(e.target.value)}
                       aria-invalid={isInvalid}
+                      disabled={loading}
                     />
                     {isInvalid && (
                       <FieldError errors={field.state.meta.errors} />
@@ -125,9 +127,9 @@ export function AddCategoryModal({ modal }: { modal: boolean }) {
             <Button
               type="submit"
               className="w-full"
-              disabled={!form.state.canSubmit}
+              disabled={!form.state.canSubmit || loading}
             >
-              Add Category
+              {loading ? "Adding..." : "Add Category"}
             </Button>
           </FieldGroup>
         </form>

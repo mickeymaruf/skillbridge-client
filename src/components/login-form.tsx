@@ -53,7 +53,7 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
       const id = toast.loading("Logining in.");
       try {
         const { data, error } = await authClient.signIn.email(value);
-        const role = (data?.user as UserWithRole).role;
+        const role = (data?.user as UserWithRole)?.role;
 
         if (error) {
           return toast.error(error.message, { id });

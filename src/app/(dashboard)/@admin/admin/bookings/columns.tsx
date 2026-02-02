@@ -4,6 +4,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import { Booking } from "@/types";
+import { BookingStatus } from "@/constants/user";
 
 export const columns: ColumnDef<Booking>[] = [
   {
@@ -33,7 +34,23 @@ export const columns: ColumnDef<Booking>[] = [
   {
     accessorKey: "status",
     header: "Status",
-    cell: ({ row }) => <Badge variant="outline">{row.original.status}</Badge>,
+    cell: ({ row }) => {
+      const status = row.original.status;
+
+      return (
+        <Badge
+          className={
+            status === BookingStatus.COMPLETED
+              ? "bg-green-500"
+              : status === BookingStatus.CANCELLED
+                ? "bg-red-500"
+                : "bg-gray-500"
+          }
+        >
+          {status}
+        </Badge>
+      );
+    },
   },
   {
     header: "Created",

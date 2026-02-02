@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { User } from "@/types";
 import { updateUserStatus, UserRole } from "@/actions/user";
 import { UserStatus } from "@/constants/user";
+import { UserStatusButton } from "./user-status-button";
 
 export const columns: ColumnDef<User>[] = [
   {
@@ -31,42 +32,8 @@ export const columns: ColumnDef<User>[] = [
   {
     id: "actions",
     header: "Actions",
-    cell: ({ row }) => {
-      const user = row.original;
-
-      return (
-        <div className="flex gap-2">
-          {user.status === UserStatus.BANNED ? (
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={async () => {
-                const confirmed = window.confirm(
-                  "Are you sure you want to unban this user?",
-                );
-                if (!confirmed) return;
-                await updateUserStatus(user.id, UserStatus.ACTIVE as UserRole);
-              }}
-            >
-              Unban
-            </Button>
-          ) : (
-            <Button
-              size="sm"
-              variant="destructive"
-              onClick={async () => {
-                const confirmed = window.confirm(
-                  "Are you sure you want to ban this user?",
-                );
-                if (!confirmed) return;
-                await updateUserStatus(user.id, UserStatus.BANNED as UserRole);
-              }}
-            >
-              Ban
-            </Button>
-          )}
-        </div>
-      );
-    },
+    cell: ({ row }) => (
+      <UserStatusButton userId={row.original.id} status={row.original.status} />
+    ),
   },
 ];
