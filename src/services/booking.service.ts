@@ -1,20 +1,18 @@
 import { BookingStatus } from "@/constants/user";
 import { cookies } from "next/headers";
+import { env } from "../../env";
 
 export const bookingService = {
   getAllBookings: async () => {
     const cookieStore = await cookies();
 
-    const res = await fetch(
-      "http://localhost:5000/api/admin/get-all-bookings",
-      {
-        next: { tags: ["bookings"] },
-        headers: {
-          Cookie: cookieStore.toString(),
-        },
-        cache: "no-store",
+    const res = await fetch(`${env.API_URL}/admin/get-all-bookings`, {
+      next: { tags: ["bookings"] },
+      headers: {
+        Cookie: cookieStore.toString(),
       },
-    );
+      cache: "no-store",
+    });
 
     if (!res.ok) {
       throw new Error(`Failed to fetch bookings (${res.status})`);
@@ -29,7 +27,7 @@ export const bookingService = {
     completed?: boolean;
   }) => {
     const cookieStore = await cookies();
-    const url = new URL(`http://localhost:5000/api/bookings`);
+    const url = new URL(`${env.API_URL}/bookings`);
 
     Object.entries(payload).forEach(
       ([key, value]) =>

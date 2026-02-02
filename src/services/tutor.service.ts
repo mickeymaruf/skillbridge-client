@@ -5,12 +5,13 @@ import {
   TutorProfileResponse,
 } from "@/types";
 import { cookies } from "next/headers";
+import { env } from "../../env";
 
 export const tutorService = {
   getAllTutors: async (searchParams: {
     [key: string]: string | string[] | undefined;
   }): Promise<ApiResponse<TutorProfile[]>> => {
-    const url = new URL(`http://localhost:5000/api/tutors`);
+    const url = new URL(`${env.API_URL}/tutors`);
 
     Object.entries(searchParams).forEach(([key, value]) => {
       if (value) url.searchParams.append(key, value.toString());
@@ -25,7 +26,7 @@ export const tutorService = {
     return await res.json();
   },
   getTutorDetails: async (id: string): Promise<TutorProfileResponse> => {
-    const res = await fetch(`http://localhost:5000/api/tutors/${id}`);
+    const res = await fetch(`${env.API_URL}/tutors/${id}`);
 
     if (!res.ok) {
       throw new Error(`Failed to fetch tutor details (${res.status})`);
@@ -36,7 +37,7 @@ export const tutorService = {
   getMyTutorProfile: async (): Promise<TutorProfileResponse> => {
     const cookieStore = await cookies();
 
-    const res = await fetch(`http://localhost:5000/api/tutors/profile/me`, {
+    const res = await fetch(`${env.API_URL}/tutors/profile/me`, {
       headers: {
         Cookie: cookieStore.toString(),
       },
@@ -54,14 +55,11 @@ export const tutorService = {
   getTutorAvailability: async () => {
     const cookieStore = await cookies();
 
-    const res = await fetch(
-      `http://localhost:5000/api/tutors/profile/availability`,
-      {
-        headers: {
-          Cookie: cookieStore.toString(),
-        },
+    const res = await fetch(`${env.API_URL}/tutors/profile/availability`, {
+      headers: {
+        Cookie: cookieStore.toString(),
       },
-    );
+    });
 
     if (!res.ok) {
       const error = await res.json();
@@ -76,15 +74,12 @@ export const tutorService = {
   getTutorBookings: async () => {
     const cookieStore = await cookies();
 
-    const res = await fetch(
-      `http://localhost:5000/api/tutors/profile/bookings`,
-      {
-        headers: {
-          Cookie: cookieStore.toString(),
-        },
-        next: { tags: ["bookings"] },
+    const res = await fetch(`${env.API_URL}/tutors/profile/bookings`, {
+      headers: {
+        Cookie: cookieStore.toString(),
       },
-    );
+      next: { tags: ["bookings"] },
+    });
 
     if (!res.ok) {
       const error = await res.json();
@@ -99,7 +94,7 @@ export const tutorService = {
   getTutorStats: async () => {
     const cookieStore = await cookies();
 
-    const res = await fetch(`http://localhost:5000/api/tutors/profile/stats`, {
+    const res = await fetch(`${env.API_URL}/tutors/profile/stats`, {
       headers: {
         Cookie: cookieStore.toString(),
       },
@@ -119,7 +114,7 @@ export const tutorService = {
   createTutorProfile: async () => {
     const cookieStore = await cookies();
 
-    const res = await fetch(`http://localhost:5000/api/tutors/profile`, {
+    const res = await fetch(`${env.API_URL}/tutors/profile`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -1,6 +1,8 @@
+import { env } from "../../env";
+
 export const categoryService = {
   getCategories: async () => {
-    const res = await fetch(`http://localhost:5000/api/categories`, {
+    const res = await fetch(`${env.API_URL}/categories`, {
       next: {
         tags: ["categories"],
       },

@@ -1,12 +1,11 @@
 import { cookies } from "next/headers";
-
-const AUTH_URL = process.env.AUTH_URL;
+import { env } from "../../env";
 
 export const authService = {
   getSession: async () => {
     const cookieStore = await cookies();
 
-    const res = await fetch(`${AUTH_URL}/get-session`, {
+    const res = await fetch(`${env.AUTH_URL}/get-session`, {
       headers: {
         Cookie: cookieStore.toString(),
       },

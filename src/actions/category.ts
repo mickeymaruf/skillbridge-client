@@ -2,6 +2,7 @@
 
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
+import { env } from "../../env";
 
 export const createCategory = async (payload: {
   name: string;
@@ -9,7 +10,7 @@ export const createCategory = async (payload: {
 }) => {
   const cookieStore = await cookies();
 
-  const res = await fetch(`http://localhost:5000/api/categories`, {
+  const res = await fetch(`${env.API_URL}/categories`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -31,7 +32,7 @@ export const createCategory = async (payload: {
 export const deleteCategory = async (id: string) => {
   const cookieStore = await cookies();
 
-  const res = await fetch(`http://localhost:5000/api/categories/${id}`, {
+  const res = await fetch(`${env.API_URL}/categories/${id}`, {
     method: "DELETE",
     headers: {
       Cookie: cookieStore.toString(),

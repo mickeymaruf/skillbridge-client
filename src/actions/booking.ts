@@ -2,19 +2,17 @@
 
 import { cookies } from "next/headers";
 import { revalidateTag } from "next/cache";
+import { env } from "../../env";
 
 // export type BookingStatus = "CONFIRMED" | "COMPLETED" | "CANCELLED";
 
 export const markBookingCompleted = async (bookingId: string) => {
   const cookieStore = await cookies();
 
-  const res = await fetch(
-    `http://localhost:5000/api/bookings/${bookingId}/complete`,
-    {
-      method: "PATCH",
-      headers: { Cookie: cookieStore.toString() },
-    },
-  );
+  const res = await fetch(`${env.API_URL}/bookings/${bookingId}/complete`, {
+    method: "PATCH",
+    headers: { Cookie: cookieStore.toString() },
+  });
 
   if (!res.ok) {
     const error = await res.json();
@@ -29,13 +27,10 @@ export const markBookingCompleted = async (bookingId: string) => {
 export const markBookingCancelled = async (bookingId: string) => {
   const cookieStore = await cookies();
 
-  const res = await fetch(
-    `http://localhost:5000/api/bookings/${bookingId}/cancel`,
-    {
-      method: "PATCH",
-      headers: { Cookie: cookieStore.toString() },
-    },
-  );
+  const res = await fetch(`${env.API_URL}/bookings/${bookingId}/cancel`, {
+    method: "PATCH",
+    headers: { Cookie: cookieStore.toString() },
+  });
 
   if (!res.ok) {
     const error = await res.json();

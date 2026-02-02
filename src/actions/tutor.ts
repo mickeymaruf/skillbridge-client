@@ -2,6 +2,7 @@
 
 import { cookies } from "next/headers";
 import { revalidateTag } from "next/cache";
+import { env } from "../../env";
 
 export type UserRole = "ACTIVE" | "BANNED";
 
@@ -12,7 +13,7 @@ export const updateTutorProfile = async (data: {
 }) => {
   const cookieStore = await cookies();
 
-  const res = await fetch(`http://localhost:5000/api/tutors/profile`, {
+  const res = await fetch(`${env.API_URL}/tutors/profile`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -36,17 +37,14 @@ export const updateTutorProfile = async (data: {
 export const setTutorCategories = async (categoryIds: string[]) => {
   const cookieStore = await cookies();
 
-  const res = await fetch(
-    `http://localhost:5000/api/tutors/profile/set-categories`,
-    {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Cookie: cookieStore.toString(),
-      },
-      body: JSON.stringify({ categoryIds }),
+  const res = await fetch(`${env.API_URL}/tutors/profile/set-categories`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Cookie: cookieStore.toString(),
     },
-  );
+    body: JSON.stringify({ categoryIds }),
+  });
 
   if (!res.ok) {
     const error = await res.json();
@@ -66,7 +64,7 @@ export const createAvailability = async (data: {
 }) => {
   const cookieStore = await cookies();
 
-  const res = await fetch(`http://localhost:5000/api/tutors/availability`, {
+  const res = await fetch(`${env.API_URL}/tutors/availability`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",

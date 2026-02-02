@@ -1,10 +1,11 @@
 import { cookies } from "next/headers";
+import { env } from "../../env";
 
 export const adminService = {
   getStats: async () => {
     const cookieStore = await cookies();
 
-    const res = await fetch("http://localhost:5000/api/admin/analytics", {
+    const res = await fetch(`${env.API_URL}/admin/analytics`, {
       headers: {
         Cookie: cookieStore.toString(),
       },
