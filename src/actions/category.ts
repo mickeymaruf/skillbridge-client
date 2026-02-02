@@ -4,6 +4,21 @@ import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 import { env } from "../../env";
 
+export const getCategories = async () => {
+  const res = await fetch(`${env.API_URL}/categories`, {
+    next: {
+      tags: ["categories"],
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error(`Failed to fetch categories (${res.status})`);
+  }
+
+  const data = await res.json();
+  return { data };
+};
+
 export const createCategory = async (payload: {
   name: string;
   slug: string;

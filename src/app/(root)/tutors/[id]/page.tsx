@@ -8,9 +8,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
-import { Star, Calendar, Clock } from "lucide-react";
+import { Star, Calendar, Clock, ArrowLeft } from "lucide-react";
 import { tutorService } from "@/services/tutor.service";
 import { BookSessionDialog } from "./book-session-dialog";
+import Link from "next/link";
 
 export default async function TutorDetails({
   params,
@@ -24,6 +25,12 @@ export default async function TutorDetails({
 
   return (
     <div className="container max-w-5xl mx-auto py-10 space-y-6">
+      <Button variant="secondary" asChild>
+        <Link href="/tutors">
+          <ArrowLeft />
+        </Link>
+      </Button>
+
       {/* HEADER */}
       <Card>
         <CardHeader className="flex flex-col gap-6 md:flex-row md:items-center">

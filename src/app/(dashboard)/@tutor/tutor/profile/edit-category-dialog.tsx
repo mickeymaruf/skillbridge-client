@@ -30,6 +30,7 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { categoryService } from "@/services/category.service";
 import { setTutorCategories } from "@/actions/tutor";
+import { getCategories } from "@/actions/category";
 
 const schema = z.object({
   categories: z.array(z.string()),
@@ -50,7 +51,7 @@ export default function EditCategoryDialog({
 
   useEffect(() => {
     (async () => {
-      const { data } = await categoryService.getCategories();
+      const { data } = await getCategories();
       setAllCategories(data.data);
     })();
   }, []);
