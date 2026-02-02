@@ -10,6 +10,10 @@ import {
   NativeSelectOption,
 } from "@/components/ui/native-select";
 import { BookingStatus } from "@/constants/user";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { LeaveReviewDialog } from "./leave-review-dialog";
+import { ViewReviewDialog } from "./view-review-dialog";
 
 export const columns: ColumnDef<Booking>[] = [
   {
@@ -63,6 +67,24 @@ export const columns: ColumnDef<Booking>[] = [
           {status}
         </Badge>
       );
+    },
+  },
+
+  {
+    id: "review",
+    header: "Review",
+    cell: ({ row }) => {
+      const booking = row.original;
+
+      if (booking.status !== BookingStatus.COMPLETED) {
+        return <span className="text-muted-foreground">N/A</span>;
+      }
+
+      if (booking.review) {
+        return <ViewReviewDialog review={booking.review} />;
+      }
+
+      return <LeaveReviewDialog bookingId={booking.id} />;
     },
   },
 

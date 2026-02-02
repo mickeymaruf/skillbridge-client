@@ -26,7 +26,9 @@ export const tutorService = {
     return await res.json();
   },
   getTutorDetails: async (id: string): Promise<TutorProfileResponse> => {
-    const res = await fetch(`${env.API_URL}/tutors/${id}`);
+    const res = await fetch(`${env.API_URL}/tutors/${id}`, {
+      next: { tags: ["tutor-profile"] },
+    });
 
     if (!res.ok) {
       throw new Error(`Failed to fetch tutor details (${res.status})`);

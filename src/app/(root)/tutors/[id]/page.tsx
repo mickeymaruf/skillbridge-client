@@ -10,6 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { Star, Calendar, Clock } from "lucide-react";
 import { tutorService } from "@/services/tutor.service";
+import { BookSessionDialog } from "./book-session-dialog";
 
 export default async function TutorDetails({
   params,
@@ -110,6 +111,13 @@ export default async function TutorDetails({
               <Badge variant={slot.isBooked ? "destructive" : "secondary"}>
                 {slot.isBooked ? "Booked" : "Available"}
               </Badge>
+
+              <CardFooter className="justify-end">
+                <BookSessionDialog
+                  tutor={{ name: tutor.user.name }}
+                  slot={slot}
+                />
+              </CardFooter>
             </div>
           ))}
         </CardContent>
@@ -153,10 +161,6 @@ export default async function TutorDetails({
             </div>
           ))}
         </CardContent>
-
-        <CardFooter className="justify-end">
-          <Button className="rounded-full">Book Session</Button>
-        </CardFooter>
       </Card>
     </div>
   );

@@ -8,6 +8,8 @@ export default async function StudentBookings() {
     cancelled: true,
   });
 
+  console.log(bookings);
+
   return (
     <div className="p-5 space-y-4">
       <div className="flex items-center justify-between">
