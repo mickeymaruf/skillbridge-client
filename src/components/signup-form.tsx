@@ -28,6 +28,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -40,6 +41,7 @@ const formSchema = z.object({
 });
 
 export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
+  const router = useRouter();
   const form = useForm({
     defaultValues: {
       name: "",
@@ -61,6 +63,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
 
         form.reset();
         toast.success("User created successfully", { id });
+        router.push("/login");
       } catch (error) {
         toast.error(
           error instanceof Error
