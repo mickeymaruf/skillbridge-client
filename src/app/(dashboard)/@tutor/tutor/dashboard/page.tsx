@@ -12,7 +12,7 @@ export default async function TutorDashboard() {
 
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">On-going Sessions</h1>
+          <h1 className="text-2xl font-bold">All Bookings</h1>
         </div>
         <DataTable columns={bookingColumns} data={bookings.data} />
       </div>

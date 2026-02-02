@@ -23,12 +23,20 @@ export function TutorFilter({ categories }: { categories: CategoriesType[] }) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
+  const name = searchParams.get("name") ?? "";
+  const category = searchParams.get("category") ?? "all";
+  const max = searchParams.get("max") ?? "";
+  const min = searchParams.get("min") ?? "";
+  const rating = searchParams.get("rating") ?? "0";
+
   const isFeatured = searchParams.get("isFeatured") === "true";
 
   const navigateToPage = useCallback(
     (name: string, value: string) => {
       const params = new URLSearchParams(searchParams.toString());
+
       params.set(name, value);
+
       router.push(pathname + "?" + params.toString());
     },
     [searchParams],
@@ -40,6 +48,7 @@ export function TutorFilter({ categories }: { categories: CategoriesType[] }) {
       <div className="flex-1">
         <Label>Name</Label>
         <Input
+          defaultValue={name}
           placeholder="Search tutor..."
           onBlur={(e) => navigateToPage("name", e.target.value)}
         />
@@ -49,6 +58,7 @@ export function TutorFilter({ categories }: { categories: CategoriesType[] }) {
       <div className="w-full md:w-40">
         <Label>Category</Label>
         <Select
+          value={category}
           onValueChange={(value) =>
             navigateToPage("category", value === "all" ? "" : value)
           }
@@ -73,6 +83,7 @@ export function TutorFilter({ categories }: { categories: CategoriesType[] }) {
         <Input
           type="number"
           placeholder="$"
+          defaultValue={max}
           onChange={(e) => navigateToPage("max", e.target.value)}
         />
       </div>
@@ -83,6 +94,7 @@ export function TutorFilter({ categories }: { categories: CategoriesType[] }) {
         <Input
           type="number"
           placeholder="$"
+          defaultValue={min}
           onChange={(e) => navigateToPage("min", e.target.value)}
         />
       </div>
@@ -90,7 +102,10 @@ export function TutorFilter({ categories }: { categories: CategoriesType[] }) {
       {/* Rating */}
       <div className="w-full md:w-32">
         <Label>Rating</Label>
-        <Select onValueChange={(value) => navigateToPage("rating", value)}>
+        <Select
+          value={rating}
+          onValueChange={(value) => navigateToPage("rating", value)}
+        >
           <SelectTrigger>
             <SelectValue placeholder="Any" />
           </SelectTrigger>

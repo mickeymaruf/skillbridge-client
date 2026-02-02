@@ -1,8 +1,12 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { categoryService } from "@/services/category.service";
+import Link from "next/link";
 
-export function Hero7() {
+export async function Hero7() {
+  const { data: categories } = await categoryService.getCategories();
+
   return (
     <section className="flex min-h-[70vh] mt-10 flex-col items-center justify-center px-4 text-center">
       {/* Top badge */}
@@ -10,18 +14,18 @@ export function Hero7() {
         variant="secondary"
         className="mb-6 rounded-full px-4 py-1 text-sm font-medium"
       >
-        Over 10,000 resources available
+        Learn from verified expert tutors
       </Badge>
 
       {/* Heading */}
       <h1 className="mb-4 max-w-3xl text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
-        What can we help you find?
+        Connect with Expert Tutors. Learn Anything, Anytime.
       </h1>
 
       {/* Subtitle */}
       <p className="mb-10 max-w-2xl text-base text-muted-foreground sm:text-lg">
-        Search our extensive library of resources, guides, and documentation to
-        find exactly what you need.
+        Browse top-rated tutors, book sessions instantly, and level up your
+        skills with personalized one-on-one learning.
       </p>
 
       {/* Search bar */}
@@ -58,20 +62,21 @@ export function Hero7() {
       {/* Filter pills */}
       <div className="mt-8 flex flex-wrap items-center justify-center gap-2">
         <Button size="sm" className="rounded-full">
-          All
+          <Link href={`/tutors`}>All</Link>
         </Button>
-        <Button size="sm" variant="outline" className="rounded-full">
-          Products
-        </Button>
-        <Button size="sm" variant="outline" className="rounded-full">
-          Services
-        </Button>
-        <Button size="sm" variant="outline" className="rounded-full">
-          Guides
-        </Button>
-        <Button size="sm" variant="outline" className="rounded-full">
-          Support
-        </Button>
+        {categories.data
+          .slice(0, 4)
+          .map((c: { slug: string; name: string }) => (
+            <Button
+              key={c.slug}
+              size="sm"
+              variant="outline"
+              className="rounded-full"
+              asChild
+            >
+              <Link href={`/tutors?category=${c.slug}`}>{c.name}</Link>
+            </Button>
+          ))}
       </div>
     </section>
   );
