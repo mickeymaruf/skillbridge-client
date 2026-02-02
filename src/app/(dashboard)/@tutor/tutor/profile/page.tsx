@@ -55,12 +55,19 @@ export default async function TutorProfile() {
           <CardTitle>Subjects</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-wrap gap-2">
-          {categories.map((c: any) => (
-            <Badge key={c.id} variant="outline">
-              {c.category.name}
-            </Badge>
-          ))}
+          {categories.length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              No subjects added yet. Click edit to add one.
+            </p>
+          ) : (
+            categories.map((c: any) => (
+              <Badge key={c.id} variant="outline">
+                {c.category.name}
+              </Badge>
+            ))
+          )}
         </CardContent>
+
         <div className="absolute right-6 top-6">
           <EditCategoryDialog
             selectedCategories={categories.map((c) => c.categoryId)}
@@ -74,23 +81,29 @@ export default async function TutorProfile() {
           <CardTitle>Reviews</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          {reviews.map((r: any) => (
-            <div key={r.id} className="border rounded-xl p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="font-medium">{r.student.name}</p>
-                  <div className="flex items-center gap-1 text-sm">
-                    <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                    {r.rating}
+          {reviews.length === 0 ? (
+            <p className="text-sm text-muted-foreground text-center py-6">
+              No reviews yet
+            </p>
+          ) : (
+            reviews.map((r: any) => (
+              <div key={r.id} className="border rounded-xl p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-medium">{r.student.name}</p>
+                    <div className="flex items-center gap-1 text-sm">
+                      <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                      {r.rating}
+                    </div>
                   </div>
+                  <span className="text-xs text-muted-foreground">
+                    {new Date(r.createdAt).toLocaleDateString()}
+                  </span>
                 </div>
-                <span className="text-xs text-muted-foreground">
-                  {new Date(r.createdAt).toLocaleDateString()}
-                </span>
+                <p className="mt-2 text-sm text-muted-foreground">{r.review}</p>
               </div>
-              <p className="mt-2 text-sm text-muted-foreground">{r.review}</p>
-            </div>
-          ))}
+            ))
+          )}
         </CardContent>
       </Card>
     </div>

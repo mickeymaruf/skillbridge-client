@@ -21,11 +21,23 @@ import z from "zod";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { UserRole } from "@/constants/user";
 
 const formSchema = z.object({
   email: z.email(),
   password: z.string().min(8, "Must be at least 8 characters long."),
 });
+
+interface UserWithRole {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  email: string;
+  emailVerified: boolean;
+  name: string;
+  image?: string | null;
+  role: string;
+}
 
 export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
   const router = useRouter();
@@ -40,7 +52,8 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
     onSubmit: async ({ value }) => {
       const id = toast.loading("Logining in.");
       try {
-        const { error } = await authClient.signIn.email(value);
+        const { data, error } = await authClient.signIn.email(value);
+        const role = (data?.user as UserWithRole).role;
 
         if (error) {
           return toast.error(error.message, { id });
@@ -48,7 +61,17 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
 
         toast.success("Logged in successfully", { id });
 
-        router.push("/dashboard");
+        if (role === UserRole.STUDENT) {
+          router.push("/dashboard");
+        }
+
+        if (role === UserRole.TUTOR) {
+          router.push("/tutor/dashboard");
+        }
+
+        if (role === UserRole.ADMIN) {
+          router.push("/admin");
+        }
       } catch (error) {
         toast.error(
           error instanceof Error
@@ -138,9 +161,9 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
             <FieldGroup>
               <Field>
                 <Button type="submit">Login</Button>
-                <Button variant="outline" type="button">
+                {/* <Button variant="outline" type="button">
                   Continue with Google
-                </Button>
+                </Button> */}
                 <FieldDescription className="text-center">
                   Don&apos;t have an account?{" "}
                   <Link href="/signup">Sign up</Link>

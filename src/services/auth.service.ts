@@ -5,8 +5,6 @@ export const authService = {
   getSession: async () => {
     const cookieStore = await cookies();
 
-    console.log(cookieStore.toString());
-
     const res = await fetch(`${env.AUTH_URL}/get-session`, {
       headers: {
         Cookie: cookieStore.toString(),

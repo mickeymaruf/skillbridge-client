@@ -52,15 +52,26 @@ export function TutorCard({ tutor }: { tutor: TutorProfile }) {
       </CardContent>
 
       {/* Footer */}
-      <CardFooter className="mt-auto flex items-center justify-between">
-        <div className="text-sm">
-          <span className="font-semibold">${tutor.hourlyRate}</span>
-          <span className="text-muted-foreground"> / hour</span>
-        </div>
+      <CardFooter className="mt-auto">
+        <div className="w-full space-y-2">
+          <p className="text-sm">
+            Available session:{" "}
+            <Badge variant="outline">
+              {tutor?._count?.availability || "N/A"}
+            </Badge>
+          </p>
 
-        <Button size="sm" className="rounded-full">
-          <Link href={`/tutors/${tutor.id}`}>View Profile</Link>
-        </Button>
+          <div className="w-full flex items-center justify-between">
+            <div className="text-sm">
+              <span className="font-semibold">${tutor.hourlyRate}</span>
+              <span className="text-muted-foreground"> / hour</span>
+            </div>
+
+            <Button size="sm" className="rounded-full">
+              <Link href={`/tutors/${tutor.id}`}>View Profile</Link>
+            </Button>
+          </div>
+        </div>
       </CardFooter>
     </Card>
   );

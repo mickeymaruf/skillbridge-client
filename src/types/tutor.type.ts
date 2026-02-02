@@ -12,6 +12,9 @@ export interface TutorProfile {
   categories: TutorCategory[];
   availability: AvailabilitySlot[];
   reviews: Review[];
+  _count?: {
+    availability: number;
+  };
 }
 
 export interface User {

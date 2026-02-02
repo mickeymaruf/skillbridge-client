@@ -6,6 +6,7 @@ import {
 } from "@/types";
 import { cookies } from "next/headers";
 import { env } from "../../env";
+import { revalidateTag } from "next/cache";
 
 export const tutorService = {
   getAllTutors: async (searchParams: {
@@ -43,6 +44,7 @@ export const tutorService = {
       headers: {
         Cookie: cookieStore.toString(),
       },
+      next: { tags: ["get-my-tutor-profile"] },
     });
 
     if (!res.ok) {
@@ -130,6 +132,8 @@ export const tutorService = {
         `Failed  create tutor profile (${res.status}): ${error.error}`,
       );
     }
+
+    revalidateTag("get-my-tutor-profile", "max");
 
     const data = await res.json();
     return { data };

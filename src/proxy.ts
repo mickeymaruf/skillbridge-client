@@ -6,14 +6,12 @@ import { authService } from "./services/auth.service";
 export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const { data: session } = await authService.getSession();
-  console.log(session);
   const role = session?.user?.role;
 
   if (!session) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  console.log(role);
   if (
     role === UserRole.STUDENT &&
     (pathname.startsWith("/tutor") || pathname.startsWith("/admin"))
@@ -25,7 +23,6 @@ export async function proxy(request: NextRequest) {
     role === UserRole.TUTOR &&
     (pathname.startsWith("/dashboard") || pathname.startsWith("/admin"))
   ) {
-    console.log("Student");
     return NextResponse.redirect(new URL("/tutor/dashboard", request.url));
   }
 

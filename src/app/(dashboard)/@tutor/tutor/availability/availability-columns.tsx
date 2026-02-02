@@ -23,16 +23,16 @@ export const availabilityColumns: ColumnDef<AvailabilitySlot>[] = [
     header: "Status",
     cell: ({ getValue }) => (getValue<boolean>() ? "Booked" : "Available"),
   },
-  {
-    id: "actions",
-    header: "Actions",
-    cell: ({ row }) => {
-      const slot = row.original;
-      return (
-        <Button size="sm" variant="destructive" onClick={async () => {}}>
-          <Trash />
-        </Button>
-      );
-    },
-  },
+  // {
+  //   id: "actions",
+  //   header: "Actions",
+  //   cell: ({ row }) => {
+  //     const slot = row.original;
+  //     return (
+  //       <Button size="sm" variant="destructive" onClick={async () => {}}>
+  //         <Trash />
+  //       </Button>
+  //     );
+  //   },
+  // },
 ];

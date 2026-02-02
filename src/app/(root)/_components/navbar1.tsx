@@ -27,6 +27,8 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { authClient } from "@/lib/auth-client";
 
 interface MenuItem {
   title: string;
@@ -86,6 +88,21 @@ const Navbar1 = ({
   },
   className,
 }: Navbar1Props) => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data } = await authClient.getSession();
+        if (data?.session) {
+          setIsAuthenticated(true);
+        }
+      } catch (error) {
+        setIsAuthenticated(false);
+      }
+    })();
+  }, []);
+
   return (
     <section className={cn("py-4", className)}>
       <div className="container mx-auto px-10">
@@ -110,15 +127,20 @@ const Navbar1 = ({
             </NavigationMenu>
           </div>
           <div className="flex gap-2">
-            <Button asChild variant="outline" size="sm">
-              <Link href={auth.login.url}>{auth.login.title}</Link>
-            </Button>
-            <Button asChild size="sm">
-              <Link href={auth.signup.url}>{auth.signup.title}</Link>
-            </Button>
-            <Button asChild variant="outline" size="sm">
-              <Link href={auth.dashboard.url}>{auth.dashboard.title}</Link>
-            </Button>
+            {isAuthenticated ? (
+              <Button asChild size="sm">
+                <Link href={auth.dashboard.url}>{auth.dashboard.title}</Link>
+              </Button>
+            ) : (
+              <>
+                <Button asChild variant="outline" size="sm">
+                  <Link href={auth.login.url}>{auth.login.title}</Link>
+                </Button>
+                <Button asChild size="sm">
+                  <Link href={auth.signup.url}>{auth.signup.title}</Link>
+                </Button>
+              </>
+            )}
           </div>
         </nav>
 
@@ -161,17 +183,24 @@ const Navbar1 = ({
                   </Accordion>
 
                   <div className="flex flex-col gap-3">
-                    <Button asChild variant="outline">
-                      <Link href={auth.login.url}>{auth.login.title}</Link>
-                    </Button>
-                    <Button asChild>
-                      <Link href={auth.signup.url}>{auth.signup.title}</Link>
-                    </Button>
-                    <Button asChild variant="outline">
-                      <Link href={auth.dashboard.url}>
-                        {auth.dashboard.title}
-                      </Link>
-                    </Button>
+                    {isAuthenticated ? (
+                      <Button asChild>
+                        <Link href={auth.dashboard.url}>
+                          {auth.dashboard.title}
+                        </Link>
+                      </Button>
+                    ) : (
+                      <>
+                        <Button asChild variant="outline">
+                          <Link href={auth.login.url}>{auth.login.title}</Link>
+                        </Button>
+                        <Button asChild>
+                          <Link href={auth.signup.url}>
+                            {auth.signup.title}
+                          </Link>
+                        </Button>
+                      </>
+                    )}
                   </div>
                 </div>
               </SheetContent>

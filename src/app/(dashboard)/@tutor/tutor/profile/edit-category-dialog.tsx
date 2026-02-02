@@ -75,6 +75,7 @@ export default function EditCategoryDialog({
       </DialogTrigger>
 
       <DialogContent>
+        <DialogTitle>Edit categories</DialogTitle>
         <form
           id="edit-categories-form"
           onSubmit={(e) => {

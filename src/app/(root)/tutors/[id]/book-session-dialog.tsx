@@ -27,6 +27,27 @@ type BookSessionDialogProps = {
 
 export function BookSessionDialog({ tutor, slot }: BookSessionDialogProps) {
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleConfirm = async () => {
+    try {
+      setLoading(true);
+
+      const { data } = await authClient.getSession();
+      if (!data?.session) {
+        toast.error("You must login before booking a session!");
+        return;
+      }
+
+      await createBooking(slot.id);
+      toast.success("Session booked successfully!");
+      setOpen(false);
+    } catch {
+      toast.error("Something went wrong. Try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -50,21 +71,15 @@ export function BookSessionDialog({ tutor, slot }: BookSessionDialogProps) {
         </DialogHeader>
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => setOpen(false)}>
+          <Button
+            variant="outline"
+            onClick={() => setOpen(false)}
+            disabled={loading}
+          >
             Cancel
           </Button>
-          <Button
-            onClick={async () => {
-              const { data } = await authClient.getSession();
-              if (!data?.session) {
-                return toast.error("You must login before booking a session!");
-              }
-
-              await createBooking(slot.id);
-              toast.success("Session booked successfully!");
-            }}
-          >
-            Confirm Booking
+          <Button onClick={handleConfirm} disabled={loading}>
+            {loading ? "Booking..." : "Confirm Booking"}
           </Button>
         </DialogFooter>
       </DialogContent>

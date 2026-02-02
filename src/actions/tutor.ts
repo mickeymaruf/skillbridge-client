@@ -29,7 +29,7 @@ export const updateTutorProfile = async (data: {
     );
   }
 
-  revalidateTag("users", "max");
+  revalidateTag("get-my-tutor-profile", "max");
 
   return res.json();
 };
@@ -53,7 +53,7 @@ export const setTutorCategories = async (categoryIds: string[]) => {
     );
   }
 
-  revalidateTag("users", "max");
+  revalidateTag("get-my-tutor-profile", "max");
 
   return res.json();
 };
@@ -78,7 +78,7 @@ export const createAvailability = async (data: {
     throw new Error(error.error);
   }
 
-  revalidateTag("users", "max");
+  revalidateTag("get-my-tutor-profile", "max");
 
   return res.json();
 };
