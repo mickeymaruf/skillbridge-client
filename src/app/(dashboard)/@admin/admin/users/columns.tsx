@@ -1,10 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Button } from "@/components/ui/button";
 import { User } from "@/types";
-import { updateUserStatus, UserRole } from "@/actions/user";
-import { UserStatus } from "@/constants/user";
 import { UserStatusButton } from "./user-status-button";
 
 export const columns: ColumnDef<User>[] = [

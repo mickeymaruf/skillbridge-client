@@ -6,16 +6,17 @@ import { env } from "../../env";
 
 export const getCategories = async () => {
   const res = await fetch(`${env.API_URL}/categories`, {
-    next: {
-      tags: ["categories"],
-    },
+    next: { tags: ["categories"] },
   });
 
+  const data = await res.json();
+
   if (!res.ok) {
-    throw new Error(`Failed to fetch categories (${res.status})`);
+    throw new Error(
+      data.message || `Failed to fetch categories (${res.status})`,
+    );
   }
 
-  const data = await res.json();
   return { data };
 };
 
@@ -34,13 +35,16 @@ export const createCategory = async (payload: {
     body: JSON.stringify(payload),
   });
 
+  const data = await res.json();
+
   if (!res.ok) {
-    throw new Error(`Failed to create category (${res.status})`);
+    throw new Error(
+      data.message || `Failed to create category (${res.status})`,
+    );
   }
 
   revalidateTag("categories", "max");
 
-  const data = await res.json();
   return { data };
 };
 
@@ -49,17 +53,18 @@ export const deleteCategory = async (id: string) => {
 
   const res = await fetch(`${env.API_URL}/categories/${id}`, {
     method: "DELETE",
-    headers: {
-      Cookie: cookieStore.toString(),
-    },
+    headers: { Cookie: cookieStore.toString() },
   });
 
+  const data = await res.json();
+
   if (!res.ok) {
-    throw new Error(`Failed to delete category (${res.status})`);
+    throw new Error(
+      data.message || `Failed to delete category (${res.status})`,
+    );
   }
 
   revalidateTag("categories", "max");
 
-  const data = await res.json();
   return { data };
 };

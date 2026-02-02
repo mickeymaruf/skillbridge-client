@@ -1,9 +1,4 @@
-import {
-  ApiResponse,
-  AvailabilitySlot,
-  TutorProfile,
-  TutorProfileResponse,
-} from "@/types";
+import { ApiResponse, TutorProfile, TutorProfileResponse } from "@/types";
 import { cookies } from "next/headers";
 import { env } from "../../env";
 import { revalidateTag } from "next/cache";
@@ -19,23 +14,28 @@ export const tutorService = {
     });
 
     const res = await fetch(url.toString());
-
+    const data = await res.json();
     if (!res.ok) {
-      throw new Error(`Failed to fetch all tutors (${res.status})`);
+      throw new Error(
+        data.message || `Failed to fetch all tutors (${res.status})`,
+      );
     }
 
-    return await res.json();
+    return data;
   },
   getTutorDetails: async (id: string): Promise<TutorProfileResponse> => {
     const res = await fetch(`${env.API_URL}/tutors/${id}`, {
       next: { tags: ["tutor-profile"] },
     });
 
+    const data = await res.json();
     if (!res.ok) {
-      throw new Error(`Failed to fetch tutor details (${res.status})`);
+      throw new Error(
+        data.message || `Failed to fetch tutor details (${res.status})`,
+      );
     }
 
-    return await res.json();
+    return data;
   },
   getMyTutorProfile: async (): Promise<TutorProfileResponse> => {
     const cookieStore = await cookies();
@@ -47,14 +47,14 @@ export const tutorService = {
       next: { tags: ["get-my-tutor-profile"] },
     });
 
+    const data = await res.json();
     if (!res.ok) {
-      const error = await res.json();
       throw new Error(
-        `Failed to fetch tutor details (${res.status}): ${error.error}`,
+        data.message || `Failed to fetch tutor details (${res.status})`,
       );
     }
 
-    return await res.json();
+    return data;
   },
   getTutorAvailability: async () => {
     const cookieStore = await cookies();
@@ -65,14 +65,13 @@ export const tutorService = {
       },
     });
 
+    const data = await res.json();
     if (!res.ok) {
-      const error = await res.json();
       throw new Error(
-        `Failed to fetch tutor availability (${res.status}): ${error.error}`,
+        data.message || `Failed to fetch tutor availability (${res.status})`,
       );
     }
 
-    const data = await res.json();
     return { data };
   },
   getTutorBookings: async () => {
@@ -85,14 +84,13 @@ export const tutorService = {
       next: { tags: ["bookings"] },
     });
 
+    const data = await res.json();
     if (!res.ok) {
-      const error = await res.json();
       throw new Error(
-        `Failed to fetch tutor bookings (${res.status}): ${error.error}`,
+        data.message || `Failed to fetch tutor bookings (${res.status})`,
       );
     }
 
-    const data = await res.json();
     return { data };
   },
   getTutorStats: async () => {
@@ -105,14 +103,13 @@ export const tutorService = {
       next: { tags: ["tutorstats"] },
     });
 
+    const data = await res.json();
     if (!res.ok) {
-      const error = await res.json();
       throw new Error(
-        `Failed to fetch tutor stats (${res.status}): ${error.error}`,
+        data.message || `Failed to fetch tutor stats (${res.status})`,
       );
     }
 
-    const data = await res.json();
     return { data };
   },
   createTutorProfile: async () => {
@@ -126,16 +123,14 @@ export const tutorService = {
       },
     });
 
+    const data = await res.json();
     if (!res.ok) {
-      const error = await res.json();
       throw new Error(
-        `Failed  create tutor profile (${res.status}): ${error.error}`,
+        data.message || `Failed create tutor profile (${res.status})`,
       );
     }
-
     revalidateTag("get-my-tutor-profile", "max");
 
-    const data = await res.json();
     return { data };
   },
 };

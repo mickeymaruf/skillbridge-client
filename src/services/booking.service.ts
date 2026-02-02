@@ -1,4 +1,3 @@
-import { BookingStatus } from "@/constants/user";
 import { cookies } from "next/headers";
 import { env } from "../../env";
 
@@ -14,11 +13,13 @@ export const bookingService = {
       cache: "no-store",
     });
 
+    const data = await res.json();
     if (!res.ok) {
-      throw new Error(`Failed to fetch bookings (${res.status})`);
+      throw new Error(
+        data.message || `Failed to fetch bookings (${res.status})`,
+      );
     }
 
-    const data = await res.json();
     return { data };
   },
   getMyBookings: async (payload: {
@@ -41,14 +42,13 @@ export const bookingService = {
       next: { tags: ["bookings"] },
     });
 
+    const data = await res.json();
     if (!res.ok) {
-      const error = await res.json();
       throw new Error(
-        `Failed to fetch tutor bookings (${res.status}): ${error.error}`,
+        data.message || `Failed to fetch tutor bookings (${res.status})`,
       );
     }
 
-    const data = await res.json();
     return { data };
   },
 };

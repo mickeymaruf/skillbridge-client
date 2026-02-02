@@ -14,6 +14,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { writeReview } from "@/actions/booking";
+import { toast } from "sonner";
 
 export function LeaveReviewDialog({ bookingId }: { bookingId: string }) {
   const [rating, setRating] = useState<number>(0);
@@ -30,6 +31,10 @@ export function LeaveReviewDialog({ bookingId }: { bookingId: string }) {
         rating,
         review,
       });
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Failed to submit review",
+      );
     } finally {
       setLoading(false);
     }

@@ -13,11 +13,13 @@ export const authService = {
       next: { tags: ["session"] },
     });
 
+    const data = await res.json();
     if (!res.ok) {
-      throw new Error(`Failed to fetch session (${res.status})`);
+      throw new Error(
+        data.message || `Failed to fetch session (${res.status})`,
+      );
     }
 
-    const data = await res.json();
     return { data };
   },
 };

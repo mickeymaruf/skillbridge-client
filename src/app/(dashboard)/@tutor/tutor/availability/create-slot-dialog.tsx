@@ -26,6 +26,7 @@ export default function CreateSlotDialog() {
     setLoading(true);
     try {
       await createAvailability({ startTime, endTime });
+      toast.success("Availability slot created successfully");
       setOpen(false);
     } catch (error) {
       toast.error((error as Error).message);

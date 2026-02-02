@@ -8,11 +8,14 @@ export const categoryService = {
       },
     });
 
+    const data = await res.json();
+
     if (!res.ok) {
-      throw new Error(`Failed to fetch categories (${res.status})`);
+      throw new Error(
+        data.message || `Failed to fetch categories (${res.status})`,
+      );
     }
 
-    const data = await res.json();
     return { data };
   },
 };

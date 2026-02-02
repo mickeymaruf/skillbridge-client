@@ -14,14 +14,17 @@ export const markBookingCompleted = async (bookingId: string) => {
     headers: { Cookie: cookieStore.toString() },
   });
 
+  const data = await res.json();
+
   if (!res.ok) {
-    const error = await res.json();
-    throw new Error(error.error);
+    throw new Error(
+      data.message || `Failed to mark booking ${bookingId} completed`,
+    );
   }
 
   revalidateTag("bookings", "max");
 
-  return res.json();
+  return data;
 };
 
 export const markBookingCancelled = async (bookingId: string) => {
@@ -32,14 +35,17 @@ export const markBookingCancelled = async (bookingId: string) => {
     headers: { Cookie: cookieStore.toString() },
   });
 
+  const data = await res.json();
+
   if (!res.ok) {
-    const error = await res.json();
-    throw new Error(error.error);
+    throw new Error(
+      data.message || `Failed to mark booking ${bookingId} cancelled`,
+    );
   }
 
   revalidateTag("bookings", "max");
 
-  return res.json();
+  return data;
 };
 
 export const createBooking = async (slotId: string) => {
@@ -54,17 +60,20 @@ export const createBooking = async (slotId: string) => {
     body: JSON.stringify({ slotId }),
   });
 
+  const data = await res.json();
+
   if (!res.ok) {
-    const error = await res.json();
-    throw new Error(error.error);
+    throw new Error(
+      data.message || `Failed to create booking for slot ${slotId}`,
+    );
   }
 
   revalidateTag("tutor-profile", "max");
 
-  return res.json();
+  return data;
 };
 
-export const writeReview = async (data: {
+export const writeReview = async (payload: {
   bookingId: string;
   rating: number;
   review: string;
@@ -77,15 +86,18 @@ export const writeReview = async (data: {
       "Content-Type": "application/json",
       Cookie: cookieStore.toString(),
     },
-    body: JSON.stringify(data),
+    body: JSON.stringify(payload),
   });
 
+  const data = await res.json();
+
   if (!res.ok) {
-    const error = await res.json();
-    throw new Error(error.error);
+    throw new Error(
+      data.message || `Failed to write review for booking ${payload.bookingId}`,
+    );
   }
 
   revalidateTag("bookings", "max");
 
-  return res.json();
+  return data;
 };

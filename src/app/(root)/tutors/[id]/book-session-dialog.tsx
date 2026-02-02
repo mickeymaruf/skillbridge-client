@@ -42,8 +42,8 @@ export function BookSessionDialog({ tutor, slot }: BookSessionDialogProps) {
       await createBooking(slot.id);
       toast.success("Session booked successfully!");
       setOpen(false);
-    } catch {
-      toast.error("Something went wrong. Try again.");
+    } catch (error) {
+      toast.error("Failed to book session");
     } finally {
       setLoading(false);
     }

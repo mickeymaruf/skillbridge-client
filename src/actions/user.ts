@@ -20,14 +20,15 @@ export const updateUserStatus = async (id: string, status: UserRole) => {
     }),
   });
 
+  const data = await res.json();
+
   if (!res.ok) {
-    const error = await res.json();
     throw new Error(
-      `Failed updating user status (${res.status}): ${error.error}`,
+      data.message || `Failed to update user status (${res.status})`,
     );
   }
 
   revalidateTag("users", "max");
 
-  return res.json();
+  return data;
 };

@@ -57,7 +57,7 @@ export function TutorCard({ tutor }: { tutor: TutorProfile }) {
           <p className="text-sm">
             Available session:{" "}
             <Badge variant="outline">
-              {tutor?._count?.availability || "N/A"}
+              {tutor?._count?.availability || 0}
             </Badge>
           </p>
 

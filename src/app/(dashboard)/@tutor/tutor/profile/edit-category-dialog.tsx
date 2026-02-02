@@ -62,9 +62,13 @@ export default function EditCategoryDialog({
     },
     validators: { onSubmit: schema },
     onSubmit: async ({ value }) => {
-      await setTutorCategories(value.categories);
-      toast.success("Categories updated");
-      setOpen(false);
+      try {
+        await setTutorCategories(value.categories);
+        toast.success("Categories updated");
+        setOpen(false);
+      } catch (e) {
+        toast.error((e as Error).message);
+      }
     },
   });
 
