@@ -6,7 +6,9 @@ import { env } from "../../env";
 
 // export type BookingStatus = "CONFIRMED" | "COMPLETED" | "CANCELLED";
 
-export const markBookingCompleted = async (bookingId: string) => {
+export const markBookingCompleted = async (
+  bookingId: string,
+): Promise<{ success: boolean; message?: string }> => {
   const cookieStore = await cookies();
 
   const res = await fetch(`${env.API_URL}/bookings/${bookingId}/complete`, {
@@ -15,15 +17,9 @@ export const markBookingCompleted = async (bookingId: string) => {
   });
 
   const data = await res.json();
-
-  if (!res.ok) {
-    throw new Error(
-      data.message || `Failed to mark booking ${bookingId} completed`,
-    );
+  if (res.ok) {
+    revalidateTag("bookings", "max");
   }
-
-  revalidateTag("bookings", "max");
-
   return data;
 };
 

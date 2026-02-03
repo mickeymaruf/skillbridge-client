@@ -37,17 +37,19 @@ export function AddCategoryModal() {
     },
     validators: { onSubmit: categorySchema },
     onSubmit: async ({ value }) => {
-      try {
-        setLoading(true);
-        await createCategory(value);
-        toast.success("Category added!");
-        form.reset();
-        setOpen(false);
-      } catch {
-        toast.error("Failed to add category");
-      } finally {
+      setLoading(true);
+      const { success, message } = await createCategory(value);
+
+      if (!success) {
+        toast.error(message || "Failed to create category");
         setLoading(false);
+        return;
       }
+
+      toast.success("Category added!");
+      form.reset();
+      setOpen(false);
+      setLoading(false);
     },
   });
 

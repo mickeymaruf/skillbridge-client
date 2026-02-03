@@ -23,7 +23,7 @@ export const getCategories = async () => {
 export const createCategory = async (payload: {
   name: string;
   slug: string;
-}) => {
+}): Promise<{ success: boolean; message?: string; data?: any }> => {
   const cookieStore = await cookies();
 
   const res = await fetch(`${env.API_URL}/categories`, {
@@ -36,16 +36,10 @@ export const createCategory = async (payload: {
   });
 
   const data = await res.json();
-
-  if (!res.ok) {
-    throw new Error(
-      data.message || `Failed to create category (${res.status})`,
-    );
+  if (res.ok) {
+    revalidateTag("categories", "max");
   }
-
-  revalidateTag("categories", "max");
-
-  return { data };
+  return data;
 };
 
 export const deleteCategory = async (id: string) => {

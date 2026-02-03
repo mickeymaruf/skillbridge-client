@@ -81,12 +81,13 @@ export const bookingColumns: ColumnDef<Booking>[] = [
             booking.status === BookingStatus.CANCELLED
           }
           onChange={async (e) => {
-            try {
-              if (e.target.value === BookingStatus.COMPLETED) {
-                await markBookingCompleted(booking.id);
+            if (e.target.value === BookingStatus.COMPLETED) {
+              const { success, message } = await markBookingCompleted(
+                booking.id,
+              );
+              if (!success) {
+                toast.error(message || "Failed to mark booking as completed");
               }
-            } catch (error) {
-              toast.error("Failed to mark booking as completed.");
             }
           }}
         >
