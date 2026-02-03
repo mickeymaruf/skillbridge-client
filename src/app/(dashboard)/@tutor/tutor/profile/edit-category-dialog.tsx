@@ -3,12 +3,12 @@
 import { useEffect, useState } from "react";
 import { useForm } from "@tanstack/react-form";
 import z from "zod";
+import { Loader2 } from "lucide-react";
 
 import {
   Dialog,
   DialogTrigger,
   DialogContent,
-  DialogHeader,
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
@@ -28,7 +28,6 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { categoryService } from "@/services/category.service";
 import { setTutorCategories } from "@/actions/tutor";
 import { getCategories } from "@/actions/category";
 
@@ -48,6 +47,7 @@ export default function EditCategoryDialog({
 }) {
   const [allCategories, setAllCategories] = useState<Category[]>([]);
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -62,12 +62,17 @@ export default function EditCategoryDialog({
     },
     validators: { onSubmit: schema },
     onSubmit: async ({ value }) => {
+      if (loading) return;
+
       try {
+        setLoading(true);
         await setTutorCategories(value.categories);
         toast.success("Categories updated");
         setOpen(false);
       } catch (e) {
         toast.error((e as Error).message);
+      } finally {
+        setLoading(false);
       }
     },
   });
@@ -80,6 +85,7 @@ export default function EditCategoryDialog({
 
       <DialogContent>
         <DialogTitle>Edit categories</DialogTitle>
+
         <form
           id="edit-categories-form"
           onSubmit={(e) => {
@@ -98,6 +104,7 @@ export default function EditCategoryDialog({
                     <FieldLabel>Add Category</FieldLabel>
 
                     <Select
+                      disabled={loading}
                       onValueChange={(id) => {
                         if (selectedIds.includes(id)) return;
                         field.handleChange([...selectedIds, id]);
@@ -133,9 +140,10 @@ export default function EditCategoryDialog({
                             {category?.name}
                             <button
                               type="button"
+                              disabled={loading}
                               onClick={() =>
                                 field.handleChange(
-                                  field.state.value.filter((cId) => cId !== id),
+                                  selectedIds.filter((cId) => cId !== id),
                                 )
                               }
                               className="ml-1 text-xs"
@@ -158,10 +166,22 @@ export default function EditCategoryDialog({
         </form>
 
         <DialogFooter className="flex justify-end gap-2">
-          <Button variant="outline" onClick={() => setOpen(false)}>
+          <Button
+            variant="outline"
+            onClick={() => setOpen(false)}
+            disabled={loading}
+          >
             Cancel
           </Button>
-          <Button form="edit-categories-form">Save</Button>
+
+          <Button
+            form="edit-categories-form"
+            disabled={loading}
+            className="gap-2"
+          >
+            {loading && <Loader2 className="h-4 w-4 animate-spin" />}
+            {loading ? "Saving..." : "Save"}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

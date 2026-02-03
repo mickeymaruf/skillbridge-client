@@ -2,6 +2,7 @@ import { AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { redirect } from "next/navigation";
 import { tutorService } from "@/services/tutor.service";
+import { CreateTutorProfileButton } from "./create-tutor-profile-button";
 
 export default async function TutorDashboardLayout({
   children,
@@ -30,7 +31,7 @@ export default async function TutorDashboardLayout({
             redirect("/tutor/profile");
           }}
         >
-          <Button size="lg">Create Tutor Profile</Button>
+          <CreateTutorProfileButton />
         </form>
       </div>
     );

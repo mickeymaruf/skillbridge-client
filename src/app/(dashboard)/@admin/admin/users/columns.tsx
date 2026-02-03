@@ -16,14 +16,17 @@ export const columns: ColumnDef<User>[] = [
   {
     accessorKey: "role",
     header: "Role",
+    enableColumnFilter: true,
   },
   {
     accessorKey: "status",
     header: "Status",
+    enableColumnFilter: true,
   },
   {
     accessorKey: "emailVerified",
     header: "Verified",
+    enableColumnFilter: true,
     cell: ({ row }) => (row.original.emailVerified ? "Yes" : "No"),
   },
   {

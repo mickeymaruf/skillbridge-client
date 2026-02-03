@@ -22,6 +22,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { updateTutorProfile } from "@/actions/tutor";
 import { useState } from "react";
+import { Loader2 } from "lucide-react";
 
 export const categorySchema = z.object({
   name: z.string().min(2, "Name cannot be empty"),
@@ -39,6 +40,7 @@ export default function EditTutorDialog({
   };
 }) {
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const form = useForm({
     defaultValues: {
@@ -48,11 +50,19 @@ export default function EditTutorDialog({
     },
     validators: { onSubmit: categorySchema },
     onSubmit: async ({ value }) => {
-      await updateTutorProfile(value);
+      if (loading) return;
 
-      toast.success("Updated!");
-      form.reset();
-      setOpen(false);
+      try {
+        setLoading(true);
+        await updateTutorProfile(value);
+        toast.success("Updated!");
+        form.reset();
+        setOpen(false);
+      } catch (e) {
+        toast.error((e as Error).message);
+      } finally {
+        setLoading(false);
+      }
     },
   });
 
@@ -87,10 +97,10 @@ export default function EditTutorDialog({
                     <FieldLabel htmlFor={field.name}>Name</FieldLabel>
                     <Input
                       id={field.name}
-                      type="text"
                       value={field.state.value}
                       onChange={(e) => field.handleChange(e.target.value)}
                       aria-invalid={isInvalid}
+                      disabled={loading}
                     />
                     {isInvalid && (
                       <FieldError errors={field.state.meta.errors} />
@@ -99,6 +109,7 @@ export default function EditTutorDialog({
                 );
               }}
             />
+
             <form.Field
               name="bio"
               children={(field) => {
@@ -113,6 +124,7 @@ export default function EditTutorDialog({
                       value={field.state.value}
                       onChange={(e) => field.handleChange(e.target.value)}
                       aria-invalid={isInvalid}
+                      disabled={loading}
                     />
                     {isInvalid && (
                       <FieldError errors={field.state.meta.errors} />
@@ -121,6 +133,7 @@ export default function EditTutorDialog({
                 );
               }}
             />
+
             <form.Field
               name="hourlyRate"
               children={(field) => {
@@ -138,6 +151,7 @@ export default function EditTutorDialog({
                         field.handleChange(Number(e.target.value) || 0)
                       }
                       aria-invalid={isInvalid}
+                      disabled={loading}
                     />
                     {isInvalid && (
                       <FieldError errors={field.state.meta.errors} />
@@ -150,10 +164,17 @@ export default function EditTutorDialog({
         </form>
 
         <DialogFooter className="flex gap-2 justify-end">
-          <Button variant="outline" onClick={() => setOpen(false)}>
+          <Button
+            variant="outline"
+            onClick={() => setOpen(false)}
+            disabled={loading}
+          >
             Cancel
           </Button>
-          <Button form="edit-tutor-form">Save</Button>
+          <Button form="edit-tutor-form" disabled={loading} className="gap-2">
+            {loading && <Loader2 className="h-4 w-4 animate-spin" />}
+            {loading ? "Saving..." : "Save"}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

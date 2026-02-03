@@ -24,6 +24,7 @@ import { useState } from "react";
 import { User } from "@/types";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
 
 export const categorySchema = z.object({
   name: z.string().min(2, "Name cannot be empty"),
@@ -32,6 +33,7 @@ export const categorySchema = z.object({
 
 export default function EditProfileDialog({ user }: { user: User }) {
   const [open, setOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 
   const form = useForm({
@@ -40,14 +42,22 @@ export default function EditProfileDialog({ user }: { user: User }) {
     },
     validators: { onSubmit: categorySchema },
     onSubmit: async ({ value }) => {
-      await authClient.updateUser({
-        name: value.name,
-      });
+      try {
+        setIsSubmitting(true);
 
-      router.refresh();
-      toast.success("Updated!");
-      form.reset();
-      setOpen(false);
+        await authClient.updateUser({
+          name: value.name,
+        });
+
+        router.refresh();
+        toast.success("Updated!");
+        form.reset();
+        setOpen(false);
+      } catch (err) {
+        toast.error((err as Error).message || "Something went wrong");
+      } finally {
+        setIsSubmitting(false);
+      }
     },
   });
 
@@ -123,7 +133,10 @@ export default function EditProfileDialog({ user }: { user: User }) {
           <Button variant="outline" onClick={() => setOpen(false)}>
             Cancel
           </Button>
-          <Button form="edit-tutor-form">Save</Button>
+          <Button form="edit-tutor-form" disabled={isSubmitting}>
+            {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            Save
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

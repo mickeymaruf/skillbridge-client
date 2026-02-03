@@ -28,9 +28,9 @@ export default async function UserProfile() {
                 </span>
               </div>
 
-              <p className="mt-2 text-sm text-muted-foreground">
+              {/* <p className="mt-2 text-sm text-muted-foreground">
                 Email Verified: {user.emailVerified ? "Yes" : "No"}
-              </p>
+              </p> */}
             </div>
           </CardContent>
           <div className="absolute right-6 top-6">
