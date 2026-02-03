@@ -6,8 +6,6 @@ export default async function Tutors() {
     isFeatured: "true",
   });
 
-  console.log(tutors);
-
   if (!tutors || tutors.length === 0) {
     return (
       <div className="w-full max-w-6xl mx-auto px-10 text-center py-20 text-gray-500">
