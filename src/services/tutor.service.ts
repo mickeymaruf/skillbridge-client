@@ -13,7 +13,9 @@ export const tutorService = {
       if (value) url.searchParams.append(key, value.toString());
     });
 
-    const res = await fetch(url.toString());
+    const res = await fetch(url.toString(), {
+      cache: "no-store",
+    });
     const data = await res.json();
     if (!res.ok) {
       throw new Error(
