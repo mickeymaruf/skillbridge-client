@@ -24,13 +24,19 @@ export default function CreateSlotDialog() {
 
   const handleCreate = async () => {
     setLoading(true);
-    try {
-      await createAvailability({ startTime, endTime });
-      toast.success("Availability slot created successfully");
-      setOpen(false);
-    } catch (error) {
-      toast.error((error as Error).message);
+    const { success, message } = await createAvailability({
+      startTime,
+      endTime,
+    });
+
+    if (!success) {
+      toast.error(message || "Failed to create availability slot");
+      setLoading(false);
+      return;
     }
+
+    toast.success("Availability slot created successfully");
+    setOpen(false);
     setLoading(false);
   };
 

@@ -63,7 +63,7 @@ export const setTutorCategories = async (categoryIds: string[]) => {
 export const createAvailability = async (payload: {
   startTime: string;
   endTime: string;
-}) => {
+}): Promise<{ success: boolean; message?: string; data?: any }> => {
   const cookieStore = await cookies();
 
   const res = await fetch(`${env.API_URL}/tutors/availability`, {
@@ -77,13 +77,9 @@ export const createAvailability = async (payload: {
 
   const data = await res.json();
 
-  if (!res.ok) {
-    throw new Error(
-      data.message || `Failed to create availability (${res.status})`,
-    );
+  if (res.ok) {
+    revalidateTag("get-my-tutor-profile", "max");
   }
-
-  revalidateTag("get-my-tutor-profile", "max");
 
   return data;
 };
