@@ -22,6 +22,8 @@ import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { UserRole } from "@/constants/user";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
   email: z.email(),
@@ -40,6 +42,8 @@ interface UserWithRole {
 }
 
 export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
+  const [loading, setLoading] = useState(false);
+
   const router = useRouter();
   const form = useForm({
     defaultValues: {
@@ -50,8 +54,11 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
       onSubmit: formSchema,
     },
     onSubmit: async ({ value }) => {
+      if (loading) return;
+
       const id = toast.loading("Logining in.");
       try {
+        setLoading(true);
         const { data, error } = await authClient.signIn.email(value);
         const role = (data?.user as UserWithRole)?.role;
 
@@ -79,6 +86,8 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
             : "An unexpected error occurred",
           { id },
         );
+      } finally {
+        setLoading(false);
       }
     },
   });
@@ -160,7 +169,10 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
 
             <FieldGroup>
               <Field>
-                <Button type="submit">Login</Button>
+                <Button type="submit" disabled={loading}>
+                  {loading && <Loader2 className="h-4 w-4 animate-spin" />}
+                  {loading ? "Logging in…" : "Login"}
+                </Button>
                 {/* <Button variant="outline" type="button">
                   Continue with Google
                 </Button> */}

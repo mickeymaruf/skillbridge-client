@@ -29,6 +29,8 @@ import {
   SelectValue,
 } from "./ui/select";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -41,6 +43,8 @@ const formSchema = z.object({
 });
 
 export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
+  const [loading, setLoading] = useState(false);
+
   const router = useRouter();
   const form = useForm({
     defaultValues: {
@@ -53,8 +57,11 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
       onSubmit: formSchema,
     },
     onSubmit: async ({ value }) => {
+      if (loading) return;
+
       const id = toast.loading("Creating user.");
       try {
+        setLoading(true);
         const { error } = await authClient.signUp.email(value);
 
         if (error) {
@@ -71,6 +78,8 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
             : "An unexpected error occurred",
           { id },
         );
+      } finally {
+        setLoading(false);
       }
     },
   });
@@ -199,7 +208,10 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
 
             <FieldGroup>
               <Field>
-                <Button type="submit">Create Account</Button>
+                <Button type="submit" disabled={loading}>
+                  {loading && <Loader2 className="h-4 w-4 animate-spin" />}
+                  {loading ? "Creating account…" : "Create Account"}
+                </Button>
                 {/* <Button variant="outline" type="button">
                   Continue with Google
                 </Button> */}

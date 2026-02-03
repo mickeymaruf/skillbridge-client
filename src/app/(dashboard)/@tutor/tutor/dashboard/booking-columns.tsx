@@ -2,8 +2,6 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Check } from "lucide-react";
 import { markBookingCompleted } from "@/actions/booking";
 import { Booking } from "@/types";
 import {
@@ -11,6 +9,7 @@ import {
   NativeSelectOption,
 } from "@/components/ui/native-select";
 import { BookingStatus } from "@/constants/user";
+import { toast } from "sonner";
 
 export const bookingColumns: ColumnDef<Booking>[] = [
   {
@@ -81,10 +80,15 @@ export const bookingColumns: ColumnDef<Booking>[] = [
             booking.status === BookingStatus.COMPLETED ||
             booking.status === BookingStatus.CANCELLED
           }
-          onChange={async (e) =>
-            e.target.value === BookingStatus.COMPLETED &&
-            (await markBookingCompleted(booking.id))
-          }
+          onChange={async (e) => {
+            try {
+              if (e.target.value === BookingStatus.COMPLETED) {
+                await markBookingCompleted(booking.id);
+              }
+            } catch (error) {
+              toast.error("Failed to mark booking as completed.");
+            }
+          }}
         >
           <NativeSelectOption value="">Select</NativeSelectOption>
           <NativeSelectOption value={BookingStatus.COMPLETED}>

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
 import { markBookingCompleted } from "@/actions/booking";
 import { Booking } from "@/types";
+import { toast } from "sonner";
 
 export const bookingColumns: ColumnDef<Booking>[] = [
   {
@@ -63,7 +64,15 @@ export const bookingColumns: ColumnDef<Booking>[] = [
       return booking.status === "COMPLETED" ? (
         <Check size={20} className="text-green-600" />
       ) : (
-        <Button onClick={async () => await markBookingCompleted(booking.id)}>
+        <Button
+          onClick={async () => {
+            try {
+              await markBookingCompleted(booking.id);
+            } catch (error) {
+              toast.error("Failed to mark booking as completed.");
+            }
+          }}
+        >
           <Check />
         </Button>
       );

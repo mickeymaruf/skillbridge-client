@@ -10,6 +10,7 @@ import {
   NativeSelectOption,
 } from "@/components/ui/native-select";
 import { BookingStatus } from "@/constants/user";
+import { toast } from "sonner";
 
 export const columns: ColumnDef<Booking>[] = [
   {
@@ -80,10 +81,15 @@ export const columns: ColumnDef<Booking>[] = [
             booking.status === BookingStatus.COMPLETED ||
             booking.status === BookingStatus.CANCELLED
           }
-          onChange={async (e) =>
-            e.target.value === BookingStatus.CANCELLED &&
-            (await markBookingCancelled(booking.id))
-          }
+          onChange={async (e) => {
+            try {
+              if (e.target.value === BookingStatus.CANCELLED) {
+                await markBookingCancelled(booking.id);
+              }
+            } catch (error) {
+              toast.error("Failed to update booking status.");
+            }
+          }}
         >
           <NativeSelectOption value="">Select</NativeSelectOption>
           <NativeSelectOption value={BookingStatus.CANCELLED}>
