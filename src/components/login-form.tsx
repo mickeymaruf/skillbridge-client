@@ -4,15 +4,16 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import {
   Field,
-  FieldDescription,
-  FieldError,
   FieldGroup,
   FieldLabel,
+  FieldError,
+  FieldDescription,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
@@ -23,28 +24,22 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { UserRole } from "@/constants/user";
 import { useState } from "react";
-import { Loader2 } from "lucide-react";
+import { Loader2, UserCircle } from "lucide-react";
 
 const formSchema = z.object({
-  email: z.email(),
+  email: z.string().email("Invalid email address"),
   password: z.string().min(8, "Must be at least 8 characters long."),
 });
 
 interface UserWithRole {
   id: string;
-  createdAt: Date;
-  updatedAt: Date;
-  email: string;
-  emailVerified: boolean;
-  name: string;
-  image?: string | null;
   role: string;
 }
 
 export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
   const [loading, setLoading] = useState(false);
-
   const router = useRouter();
+
   const form = useForm({
     defaultValues: {
       email: "",
@@ -55,136 +50,156 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
     },
     onSubmit: async ({ value }) => {
       if (loading) return;
-
-      const id = toast.loading("Logining in.");
+      const id = toast.loading("Logging in...");
       try {
         setLoading(true);
         const { data, error } = await authClient.signIn.email(value);
+
+        if (error) return toast.error(error.message, { id });
+
         const role = (data?.user as UserWithRole)?.role;
-
-        if (error) {
-          return toast.error(error.message, { id });
-        }
-
         toast.success("Logged in successfully", { id });
 
-        if (role === UserRole.STUDENT) {
-          router.push("/dashboard");
-        }
-
-        if (role === UserRole.TUTOR) {
-          router.push("/tutor/dashboard");
-        }
-
-        if (role === UserRole.ADMIN) {
-          router.push("/admin");
-        }
+        if (role === UserRole.STUDENT) router.push("/dashboard");
+        else if (role === UserRole.TUTOR) router.push("/tutor/dashboard");
+        else if (role === UserRole.ADMIN) router.push("/admin");
       } catch (error) {
-        toast.error(
-          error instanceof Error
-            ? error.message
-            : "An unexpected error occurred",
-          { id },
-        );
+        toast.error("An unexpected error occurred", { id });
       } finally {
         setLoading(false);
       }
     },
   });
 
+  // Just fills the fields, does NOT submit
+  const fillTestAccount = (email: string) => {
+    form.setFieldValue("email", email);
+    form.setFieldValue("password", "password123");
+    toast.info(`Filled form with ${email}`, { duration: 2000 });
+  };
+
   return (
     <Card {...props}>
       <CardHeader>
-        <CardTitle>Login to your account</CardTitle>
+        <CardTitle>Login</CardTitle>
         <CardDescription>
-          Enter your email below to login to your account
+          Select a role to autofill or enter your credentials.
         </CardDescription>
       </CardHeader>
-      <CardContent>
-        <form>
-          <FieldGroup>
-            <Field></Field>
-          </FieldGroup>
-        </form>
+      <CardContent className="space-y-6">
+        {/* Autofill Section */}
+        <div className="space-y-3">
+          <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+            Quick Fill (Demo)
+          </label>
+          <div className="grid grid-cols-3 gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => fillTestAccount("student@example.com")}
+            >
+              Student
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => fillTestAccount("tutor@example.com")}
+            >
+              Tutor
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => fillTestAccount("admin@example.com")}
+            >
+              Admin
+            </Button>
+          </div>
+        </div>
+
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-background px-2 text-muted-foreground">
+              Or Manual Login
+            </span>
+          </div>
+        </div>
 
         <form
           onSubmit={(e) => {
             e.preventDefault();
+            e.stopPropagation();
             form.handleSubmit();
           }}
         >
-          <FieldGroup>
+          <FieldGroup className="space-y-4">
             <form.Field
               name="email"
-              children={(field) => {
-                const isInvalid =
-                  field.state.meta.isTouched && !field.state.meta.isValid;
-                return (
-                  <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>Email</FieldLabel>
-                    <Input
-                      id={field.name}
-                      type="email"
-                      value={field.state.value}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      aria-invalid={isInvalid}
-                    />
-                    {isInvalid && (
-                      <FieldError errors={field.state.meta.errors} />
-                    )}
-                  </Field>
-                );
-              }}
+              children={(field) => (
+                <Field>
+                  <FieldLabel>Email</FieldLabel>
+                  <Input
+                    type="email"
+                    value={field.state.value}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    placeholder="name@example.com"
+                  />
+                  {field.state.meta.isTouched && (
+                    <FieldError errors={field.state.meta.errors} />
+                  )}
+                </Field>
+              )}
             />
             <form.Field
               name="password"
-              children={(field) => {
-                const isInvalid =
-                  field.state.meta.isTouched && !field.state.meta.isValid;
-                return (
-                  <Field data-invalid={isInvalid}>
-                    <div className="flex items-center">
-                      <FieldLabel htmlFor={field.name}>Password</FieldLabel>
-                      <a
-                        href="#"
-                        className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                      >
-                        Forgot your password?
-                      </a>
-                    </div>
-                    <Input
-                      id={field.name}
-                      type="password"
-                      value={field.state.value}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      aria-invalid={isInvalid}
-                    />
-                    {isInvalid && (
-                      <FieldError errors={field.state.meta.errors} />
-                    )}
-                  </Field>
-                );
-              }}
+              children={(field) => (
+                <Field>
+                  <div className="flex items-center justify-between">
+                    <FieldLabel>Password</FieldLabel>
+                    <Link
+                      href="#"
+                      className="text-sm text-primary hover:underline"
+                    >
+                      Forgot password?
+                    </Link>
+                  </div>
+                  <Input
+                    type="password"
+                    value={field.state.value}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                  />
+                  {field.state.meta.isTouched && (
+                    <FieldError errors={field.state.meta.errors} />
+                  )}
+                </Field>
+              )}
             />
-
-            <FieldGroup>
-              <Field>
-                <Button type="submit" disabled={loading}>
-                  {loading && <Loader2 className="h-4 w-4 animate-spin" />}
-                  {loading ? "Logging in…" : "Login"}
-                </Button>
-                {/* <Button variant="outline" type="button">
-                  Continue with Google
-                </Button> */}
-                <FieldDescription className="text-center">
-                  Don&apos;t have an account?{" "}
-                  <Link href="/signup">Sign up</Link>
-                </FieldDescription>
-              </Field>
-            </FieldGroup>
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : null}
+              {loading ? "Verifying..." : "Login"}
+            </Button>
           </FieldGroup>
         </form>
       </CardContent>
+      <CardFooter className="flex justify-center border-t py-4">
+        <p className="text-sm text-muted-foreground">
+          Don&apos;t have an account?{" "}
+          <Link
+            href="/signup"
+            className="font-medium text-primary hover:underline"
+          >
+            Sign up
+          </Link>
+        </p>
+      </CardFooter>
     </Card>
   );
 }

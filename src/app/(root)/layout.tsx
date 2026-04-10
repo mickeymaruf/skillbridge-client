@@ -1,13 +1,13 @@
-import { Navbar1 } from "@/app/(root)/_components/navbar1";
-import { Footer2 } from "@/components/footer2";
+import Navbar from "@/app/(root)/_components/navbar";
+import Footer from "@/components/footer";
 import React from "react";
 
 function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="pb-10">
-      <Navbar1 />
+    <div className="bg-[#f8f9fa] dark:bg-zinc-950">
+      <Navbar />
       {children}
-      <Footer2 />
+      <Footer />
     </div>
   );
 }
