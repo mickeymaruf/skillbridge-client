@@ -7,6 +7,7 @@ export const tutorService = {
   getAllTutors: async (searchParams: {
     [key: string]: string | string[] | undefined;
   }): Promise<ApiResponse<TutorProfile[]>> => {
+    const cookieStore = await cookies();
     const url = new URL(`${env.API_URL}/tutors`);
 
     Object.entries(searchParams).forEach(([key, value]) => {
@@ -14,6 +15,9 @@ export const tutorService = {
     });
 
     const res = await fetch(url.toString(), {
+      headers: {
+        Cookie: cookieStore.toString(),
+      },
       cache: "no-store",
     });
     const data = await res.json();
@@ -34,8 +38,33 @@ export const tutorService = {
     if (!res.ok) throw new Error("Failed to fetch related tutors");
     return res.json();
   },
+  getRecommendedMentors: async (): Promise<ApiResponse<TutorProfile[]>> => {
+    const cookieStore = await cookies();
+
+    const res = await fetch(`${env.API_URL}/tutors/recommendations/me`, {
+      method: "GET",
+      headers: {
+        Cookie: cookieStore.toString(),
+      },
+      next: { tags: ["recommendations"] },
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(
+        data.message || `Failed to fetch recommended mentors (${res.status})`,
+      );
+    }
+
+    return data;
+  },
   getTutorDetails: async (id: string): Promise<TutorProfileResponse> => {
+    const cookieStore = await cookies();
     const res = await fetch(`${env.API_URL}/tutors/${id}`, {
+      headers: {
+        Cookie: cookieStore.toString(),
+      },
       next: { tags: ["tutor-profile"] },
     });
 
