@@ -2,24 +2,37 @@ import Link from "next/link";
 import { Twitter, Github, Youtube, Globe } from "lucide-react";
 
 export default function Footer() {
+  // Updated links to match the new pages
   const links = {
-    useful: ["Mentors Community", "Find Mentors", "Categories", "Register"],
-    contact: ["Support", "About Us", "Contact Us"],
-    rules: ["Privacy & Policy", "Terms of Service", "Cookies Policy"],
+    useful: [
+      { name: "Find Mentors", href: "/tutors" },
+      { name: "Categories", href: "/categories" },
+      { name: "Mentors Community", href: "/community" },
+      { name: "Blog / Journal", href: "/blog" },
+    ],
+    contact: [
+      { name: "About Us", href: "/about" },
+      { name: "Contact Us", href: "/contact" },
+      { name: "Help / Support", href: "/support" },
+    ],
+    rules: [
+      { name: "Privacy Policy", href: "/privacy" },
+      { name: "Terms of Service", href: "/terms" },
+      { name: "Cookies Policy", href: "/cookies" },
+    ],
   };
 
   return (
     <footer className="w-full bg-transparent">
-      {/* 2. LOWER LINK TRACK SECTION */}
-      {/* CRITICAL FIX: rounded-t-[60px] and -mt-24 creates the overlap 
-          The border-t and slightly lighter gray makes it pop from the CTA section.
-      */}
-      <div className="relative z-20 bg-[#111111] border-t border-white/5 rounded-t-[40px] md:rounded-t-[80px] pt-32 pb-12 px-8 md:px-20">
+      <div className="relative z-20 bg-[#111111] pt-32 pb-12 px-8 md:px-20">
         <div className="max-w-[1440px] mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-5 gap-12 mb-24">
             {/* Column 1: Brand */}
             <div className="col-span-2 md:col-span-1">
-              <div className="flex items-center gap-2 font-bold text-white text-2xl tracking-tighter mb-6">
+              <Link
+                href="/"
+                className="flex items-center gap-2 font-bold text-white text-2xl tracking-tighter mb-6"
+              >
                 <div className="text-[#4ade80]">
                   <svg
                     width="28"
@@ -31,25 +44,25 @@ export default function Footer() {
                   </svg>
                 </div>
                 Mentorable
-              </div>
+              </Link>
               <p className="text-slate-500 text-[13px] leading-relaxed max-w-[200px]">
                 A place to find yourself among mentors and gigs.
               </p>
             </div>
 
-            {/* Column 2: Links */}
+            {/* Column 2: Useful Links */}
             <div>
               <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-8">
                 Useful Links
               </h4>
               <ul className="space-y-4">
                 {links.useful.map((item) => (
-                  <li key={item}>
+                  <li key={item.name}>
                     <Link
-                      href="#"
+                      href={item.href}
                       className="text-[13px] font-bold text-slate-300 hover:text-[#4ade80] transition-colors"
                     >
-                      {item}
+                      {item.name}
                     </Link>
                   </li>
                 ))}
@@ -59,16 +72,16 @@ export default function Footer() {
             {/* Column 3: Contact */}
             <div>
               <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-8">
-                Contact
+                Company
               </h4>
               <ul className="space-y-4">
                 {links.contact.map((item) => (
-                  <li key={item}>
+                  <li key={item.name}>
                     <Link
-                      href="#"
+                      href={item.href}
                       className="text-[13px] font-bold text-slate-300 hover:text-[#4ade80] transition-colors"
                     >
-                      {item}
+                      {item.name}
                     </Link>
                   </li>
                 ))}
@@ -78,16 +91,16 @@ export default function Footer() {
             {/* Column 4: Rules */}
             <div>
               <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-8">
-                Rules
+                Legal
               </h4>
               <ul className="space-y-4">
                 {links.rules.map((item) => (
-                  <li key={item}>
+                  <li key={item.name}>
                     <Link
-                      href="#"
+                      href={item.href}
                       className="text-[13px] font-bold text-slate-300 hover:text-[#4ade80] transition-colors"
                     >
-                      {item}
+                      {item.name}
                     </Link>
                   </li>
                 ))}
@@ -107,14 +120,14 @@ export default function Footer() {
               </Link>
 
               <div className="flex gap-3">
-                <div className="bg-[#1a1a1a] border border-white/5 p-2 rounded-xl cursor-pointer hover:bg-[#222]">
+                <div className="bg-[#1a1a1a] border border-white/5 p-2 rounded-xl cursor-pointer hover:bg-[#222] transition-colors">
                   <img
                     src="/google-play-badge.png"
                     alt="Google Play"
                     className="h-6"
                   />
                 </div>
-                <div className="bg-[#1a1a1a] border border-white/5 p-2 rounded-xl cursor-pointer hover:bg-[#222]">
+                <div className="bg-[#1a1a1a] border border-white/5 p-2 rounded-xl cursor-pointer hover:bg-[#222] transition-colors">
                   <img
                     src="/app-store-badge.png"
                     alt="App Store"
@@ -125,17 +138,17 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* 3. BOTTOM UTILITY BAR */}
+          {/* BOTTOM UTILITY BAR */}
           <div className="pt-10 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-8">
             <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">
-              © All Rights Reserved for Mentorable 2025
+              © All Rights Reserved for Mentorable 2026
             </span>
 
             <div className="flex items-center gap-3">
-              <button className="bg-white text-black text-[10px] font-black px-5 py-2.5 rounded-full tracking-widest uppercase">
+              <button className="bg-white text-black text-[10px] font-black px-5 py-2.5 rounded-full tracking-widest uppercase hover:bg-[#4ade80] transition-colors">
                 USA DOLLAR ($)
               </button>
-              <button className="bg-[#1a1a1a] text-white text-[10px] font-black px-5 py-2.5 rounded-full tracking-widest uppercase border border-white/10 flex items-center gap-2">
+              <button className="bg-[#1a1a1a] text-white text-[10px] font-black px-5 py-2.5 rounded-full tracking-widest uppercase border border-white/10 flex items-center gap-2 hover:border-white/40 transition-colors">
                 <Globe size={14} /> ENGLISH
               </button>
             </div>
