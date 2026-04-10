@@ -3,6 +3,7 @@ import { Lora, Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/theme-provider";
+import Script from "next/script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -42,6 +43,17 @@ export default function RootLayout({
         >
           {children}
         </ThemeProvider>
+
+        <Script
+          src="https://app.wonderchat.io/scripts/wonderchat-seo.js"
+          data-name="wonderchat-seo"
+          data-address="app.wonderchat.io"
+          data-id="cmnsrou23005411w7uul5k1if"
+          data-widget-size="normal"
+          data-widget-button-size="normal"
+          defer
+        />
+
         <Toaster richColors />
       </body>
     </html>
