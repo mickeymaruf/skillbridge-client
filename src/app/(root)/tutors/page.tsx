@@ -30,7 +30,7 @@ export default async function TutorsPage({
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {recommendedMentors.map((tutor) => (
+              {recommendedMentors.map((tutor: any) => (
                 <Link
                   key={tutor.id}
                   href={`/tutors/${tutor.id}`}

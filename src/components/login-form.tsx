@@ -57,7 +57,7 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
 
         if (error) return toast.error(error.message, { id });
 
-        const role = (data?.user as UserWithRole)?.role;
+        const role = (data?.user as any)?.role;
         toast.success("Logged in successfully", { id });
 
         if (role === UserRole.STUDENT) router.push("/dashboard");
@@ -74,7 +74,7 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
   // Just fills the fields, does NOT submit
   const fillTestAccount = (email: string) => {
     form.setFieldValue("email", email);
-    form.setFieldValue("password", "password123");
+    form.setFieldValue("password", "Pa$$w0rd!");
     toast.info(`Filled form with ${email}`, { duration: 2000 });
   };
 
@@ -97,7 +97,7 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
               type="button"
               variant="outline"
               size="sm"
-              onClick={() => fillTestAccount("student@example.com")}
+              onClick={() => fillTestAccount("nivoq@mailinator.com")}
             >
               Student
             </Button>
@@ -105,7 +105,7 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
               type="button"
               variant="outline"
               size="sm"
-              onClick={() => fillTestAccount("tutor@example.com")}
+              onClick={() => fillTestAccount("gaka@mailinator.com")}
             >
               Tutor
             </Button>
@@ -113,7 +113,7 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
               type="button"
               variant="outline"
               size="sm"
-              onClick={() => fillTestAccount("admin@example.com")}
+              onClick={() => fillTestAccount("alex@skillbridge.com")}
             >
               Admin
             </Button>

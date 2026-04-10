@@ -86,7 +86,15 @@ export default function AccurateStorySection() {
   );
 }
 
-function TestimonialCard({ className, name, isLight = false }) {
+function TestimonialCard({
+  className,
+  name,
+  isLight = false,
+}: {
+  className: string;
+  name: string;
+  isLight?: boolean;
+}) {
   return (
     <div
       className={`absolute w-[280px] p-5 rounded-[24px] shadow-[0_20px_40px_rgba(0,0,0,0.4)] z-20 backdrop-blur-md border border-white/5 transition-all hover:scale-105 duration-500 ${className}`}
