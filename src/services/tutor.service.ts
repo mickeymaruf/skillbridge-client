@@ -25,6 +25,15 @@ export const tutorService = {
 
     return data;
   },
+  getRelatedTutors: async (
+    id: string,
+  ): Promise<ApiResponse<TutorProfile[]>> => {
+    const res = await fetch(`${env.API_URL}/tutors/${id}/related`, {
+      next: { revalidate: 3600 }, // Cache for 1 hour
+    });
+    if (!res.ok) throw new Error("Failed to fetch related tutors");
+    return res.json();
+  },
   getTutorDetails: async (id: string): Promise<TutorProfileResponse> => {
     const res = await fetch(`${env.API_URL}/tutors/${id}`, {
       next: { tags: ["tutor-profile"] },
