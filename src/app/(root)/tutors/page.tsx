@@ -2,6 +2,7 @@ import { TutorFilter } from "./_components/tutor-filter";
 import { TutorCard } from "@/components/tutor-card";
 import { categoryService } from "@/services/category.service";
 import { tutorService } from "@/services/tutor.service";
+import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -34,44 +35,81 @@ export default async function TutorsPage({
                 <Link
                   key={tutor.id}
                   href={`/tutors/${tutor.id}`}
-                  className="group block bg-white border border-black/5 p-6 hover:border-black/20 transition-all"
+                  className="group relative block p-6 rounded-[32px] overflow-hidden transition-all duration-500 hover:-translate-y-1"
                 >
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="relative h-12 w-12 overflow-hidden rounded-full bg-gray-100">
+                  {/* Glass Background Layer */}
+                  <div className="absolute inset-0 bg-white/40 backdrop-blur-xl border border-white/60 rounded-[32px] shadow-[0_8px_32px_rgba(0,0,0,0.04)] -z-10 group-hover:bg-white/60 transition-colors" />
+
+                  {/* Header: Avatar & Identity */}
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="relative h-14 w-14 overflow-hidden rounded-2xl bg-gradient-to-br from-[#F5F5F2] to-[#E9EBE6] border border-black/[0.05]">
                       {tutor.userImage ? (
                         <Image
                           src={tutor.userImage}
                           alt={tutor.userName}
                           fill
-                          className="object-cover"
+                          className="object-cover transition-transform duration-700 group-hover:scale-110"
                         />
                       ) : (
-                        <div className="h-full w-full flex items-center justify-center bg-black text-white text-xs">
-                          {tutor.userName.charAt(0)}
+                        /* Minimalist Placeholder SVG */
+                        <div className="absolute inset-0 flex items-center justify-center p-3 opacity-20">
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M12 11C13.6569 11 15 9.65685 15 8C15 6.34315 13.6569 5 12 5C10.3431 5 9 6.34315 9 8C9 9.65685 10.3431 11 12 11Z"
+                              fill="currentColor"
+                            />
+                            <path
+                              d="M18 18.5C18 15.4624 15.3137 13 12 13C8.68629 13 6 15.4624 6 18.5V19H18V18.5Z"
+                              fill="currentColor"
+                            />
+                          </svg>
                         </div>
                       )}
                     </div>
+
                     <div>
-                      <h3 className="font-medium text-sm text-black">
+                      <h3 className="text-sm font-black uppercase tracking-tight text-black">
                         {tutor.userName}
                       </h3>
-                      <p className="text-[10px] uppercase tracking-widest text-black/40">
-                        Recommended Mentor
-                      </p>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-[#2E7D32]">
+                          Recommended
+                        </span>
+                        <div className="w-1 h-1 rounded-full bg-black/10" />
+                        <span className="text-[9px] font-bold uppercase tracking-widest text-black/30">
+                          Mentor
+                        </span>
+                      </div>
                     </div>
                   </div>
 
-                  <p className="text-sm text-black/60 line-clamp-2 mb-6 h-10">
-                    {tutor.bio}
+                  {/* Bio Block */}
+                  <p className="font-serif text-[15px] italic text-black/60 line-clamp-2 mb-8 leading-relaxed h-11">
+                    "{tutor.bio}"
                   </p>
 
-                  <div className="flex items-center justify-between pt-4 border-t border-black/5">
-                    <span className="text-sm font-semibold">
-                      ${tutor.hourlyRate}/hr
-                    </span>
-                    <span className="text-[10px] font-bold uppercase text-black group-hover:underline">
-                      View Profile
-                    </span>
+                  {/* Footer: Price & Action */}
+                  <div className="flex items-center justify-between pt-5 border-t border-black/5">
+                    <div className="flex flex-col">
+                      <span className="text-[9px] font-black uppercase tracking-widest text-black/30">
+                        Rate
+                      </span>
+                      <span className="text-sm font-black text-[#1A1A1A]">
+                        ${tutor.hourlyRate}
+                        <span className="text-[10px] text-black/40">/hr</span>
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-2 px-4 py-2 bg-black text-white rounded-full transition-all group-hover:bg-[#2E7D32]">
+                      <span className="text-[9px] font-black uppercase tracking-widest">
+                        Profile
+                      </span>
+                      <ArrowUpRight size={12} strokeWidth={3} />
+                    </div>
                   </div>
                 </Link>
               ))}
